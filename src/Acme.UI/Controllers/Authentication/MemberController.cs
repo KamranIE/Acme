@@ -7,11 +7,6 @@ namespace Acme.UI.Controllers.Authentication
 {
     public class MemberController : SurfaceController
     {
-
-        public MemberController() {
-            //int a = 1;
-        }
-
         public ActionResult RenderLogin(string returnUrl)
         {
             var model = new LoginModel
@@ -64,7 +59,6 @@ namespace Acme.UI.Controllers.Authentication
             return PartialView("~/Views/Authentication/_Logout.cshtml", returnUrl);
         }
 
-        [HttpPost]
         public ActionResult SubmitLogout(string returnUrl)
         {
             TempData.Clear();

@@ -6,15 +6,19 @@
     using (Html.BeginForm("SubmitLogin", "Member", System.Web.Mvc.FormMethod.Post, new { id = "login" }))
     {
         @Html.AntiForgeryToken()
-        @Html.LabelFor(m => m.Username)
-        @Html.TextBoxFor(m => m.Username, new { placeholder = "Username" })
+        <div class="login-container">
+            <div>
+                @Html.LabelFor(m => m.Username)
+                @Html.TextBoxFor(m => m.Username, new { placeholder = "Username" })
+            </div>
+            <div>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password, new { placeholder = "Password" })
+            </div>
+            @Html.ValidationSummary()
+            @Html.Hidden("returnUrl", Model.ReturnUrl ?? "")
 
-        @Html.LabelFor(m => m.Password)
-        @Html.PasswordFor(m => m.Password, new { placeholder = "Password" })
-
-        @Html.ValidationSummary()
-        @Html.Hidden("returnUrl", Model.ReturnUrl ?? "")
-
-        <button name="login" type="submit">Login</button>
+            <button name="login" type="submit" class="button-style login">Login</button>
+        </div>
     }
 }

@@ -93,6 +93,9 @@
     <Reference Include="Umbraco.Web">
       <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Web.dll</HintPath>
     </Reference>
+    <Reference Include="Umbraco.Web.PublishedModels">
+      <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Web.PublishedModels.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
@@ -100,6 +103,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\Acme.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
@@ -149,12 +155,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Member\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Acme.Umbraco.Models\Acme.Umbraco.Models.csproj">
-      <Project>{a65500e8-4438-499e-8625-a1835d97bffe}</Project>
-      <Name>Acme.Umbraco.Models</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
