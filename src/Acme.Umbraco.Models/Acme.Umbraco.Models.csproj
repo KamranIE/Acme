@@ -7,12 +7,12 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2510A51D-72F1-4359-B56B-85C49B57F149}</ProjectGuid>
+    <ProjectGuid>{A65500E8-4438-499E-8625-A1835D97BFFE}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Acme.UI</RootNamespace>
-    <AssemblyName>Acme.UI</AssemblyName>
+    <RootNamespace>Acme.Umbraco.Models</RootNamespace>
+    <AssemblyName>Acme.Umbraco.Models</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -43,17 +43,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Examine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Bin\Examine.dll</HintPath>
-    </Reference>
-    <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Bin\Lucene.Net.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -64,24 +56,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
@@ -89,7 +63,12 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="Umbraco.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="Umbraco.Core">
+      <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Umbraco.ModelsBuilder">
+      <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.ModelsBuilder.dll</HintPath>
+    </Reference>
     <Reference Include="Umbraco.Web">
       <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Web.dll</HintPath>
     </Reference>
@@ -100,61 +79,44 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Site.css" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Views\Authentication\_Login.cshtml" />
-    <Content Include="Views\Authentication\_Logout.cshtml" />
-    <Content Include="Views\Web.config" />
-    <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Athletes\List.cshtml" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
-    <Content Include="Views\Partial Views\Navigation\TopNavigation.cshtml" />
-    <None Include="Web.config">
-      <SubType>Designer</SubType>
-    </None>
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Authentication\MemberController.cs" />
-    <Compile Include="Controllers\Business\AthletesController.cs" />
-    <Compile Include="Models\Athletes\Athlete.cs" />
-    <Compile Include="Models\Authentication\LoginModel.cs" />
+    <Compile Include="Models\Assessment.generated.cs" />
+    <Compile Include="Models\Athlete.generated.cs" />
+    <Compile Include="Models\AthletesAssessment.generated.cs" />
+    <Compile Include="Models\AthletesList.generated.cs" />
+    <Compile Include="Models\Blog.generated.cs" />
+    <Compile Include="Models\Blogpost.generated.cs" />
+    <Compile Include="Models\Contact.generated.cs" />
+    <Compile Include="Models\ContentBase.generated.cs" />
+    <Compile Include="Models\ContentPage.generated.cs" />
+    <Compile Include="Models\Data.generated.cs" />
+    <Compile Include="Models\Feature.generated.cs" />
+    <Compile Include="Models\File.generated.cs" />
+    <Compile Include="Models\Folder.generated.cs" />
+    <Compile Include="Models\Home.generated.cs" />
+    <Compile Include="Models\HomePage.generated.cs" />
+    <Compile Include="Models\Image.generated.cs" />
+    <Compile Include="Models\Login.generated.cs" />
+    <Compile Include="Models\Member.generated.cs" />
+    <Compile Include="Models\NavigationBase.generated.cs" />
+    <Compile Include="Models\People.generated.cs" />
+    <Compile Include="Models\Person.generated.cs" />
+    <Compile Include="Models\Physiotherapist.generated.cs" />
+    <Compile Include="Models\Physiotherapists.generated.cs" />
+    <Compile Include="Models\Product.generated.cs" />
+    <Compile Include="Models\Products.generated.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Properties\PublishProfiles\LocalDev.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Member\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Acme.Umbraco.Models\Acme.Umbraco.Models.csproj">
-      <Project>{a65500e8-4438-499e-8625-a1835d97bffe}</Project>
-      <Name>Acme.Umbraco.Models</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -169,9 +131,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>51596</DevelopmentServerPort>
+          <DevelopmentServerPort>52305</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:51596/</IISUrl>
+          <IISUrl>http://localhost:51590/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -187,10 +149,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
-  <PropertyGroup>
-    <PreBuildEvent>tasklist /FI "IMAGENAME eq VBCSCompiler.exe" 2&gt;NUL | find /I /N "VBCSCompiler.exe"&gt;NUL
-if "%25ERRORLEVEL%25"=="0" (taskkill /IM VBCSCompiler.exe /F) else (verify &gt;NUL)</PreBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

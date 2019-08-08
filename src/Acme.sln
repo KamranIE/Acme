@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acme.UI", "Acme.UI\Acme.UI.csproj", "{2510A51D-72F1-4359-B56B-85C49B57F149}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acme.Umbraco.Models", "Acme.Umbraco.Models\Acme.Umbraco.Models.csproj", "{A65500E8-4438-499E-8625-A1835D97BFFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary1", "ClassLibrary1\ClassLibrary1.csproj", "{61A2D22E-4105-482C-96C5-DE58CAE8A056}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{2510A51D-72F1-4359-B56B-85C49B57F149}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2510A51D-72F1-4359-B56B-85C49B57F149}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2510A51D-72F1-4359-B56B-85C49B57F149}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A65500E8-4438-499E-8625-A1835D97BFFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A65500E8-4438-499E-8625-A1835D97BFFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A65500E8-4438-499E-8625-A1835D97BFFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A65500E8-4438-499E-8625-A1835D97BFFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61A2D22E-4105-482C-96C5-DE58CAE8A056}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61A2D22E-4105-482C-96C5-DE58CAE8A056}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61A2D22E-4105-482C-96C5-DE58CAE8A056}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61A2D22E-4105-482C-96C5-DE58CAE8A056}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
