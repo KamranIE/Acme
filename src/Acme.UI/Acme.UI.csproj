@@ -43,6 +43,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Examine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\Examine.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\Lucene.Net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -81,8 +89,12 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Umbraco.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="Umbraco.Web">
       <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Umbraco.Web.PublishedModels">
+      <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Web.PublishedModels.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -91,12 +103,40 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Views\Authentication\_Login.cshtml" />
     <Content Include="Views\Authentication\_Logout.cshtml" />
-    <None Include="Web.config" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Athletes\List.cshtml" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Partial Views\Navigation\TopNavigation.cshtml" />
+    <None Include="Web.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Authentication\MemberController.cs" />
+    <Compile Include="Controllers\Business\AthletesController.cs" />
+    <Compile Include="Models\Athletes\Athlete.cs" />
     <Compile Include="Models\Authentication\LoginModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -144,6 +184,10 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
+  <PropertyGroup>
+    <PreBuildEvent>tasklist /FI "IMAGENAME eq VBCSCompiler.exe" 2&gt;NUL | find /I /N "VBCSCompiler.exe"&gt;NUL
+if "%25ERRORLEVEL%25"=="0" (taskkill /IM VBCSCompiler.exe /F) else (verify &gt;NUL)</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -7,15 +7,29 @@ namespace Acme.UI.Controllers.Authentication
 {
     public class MemberController : SurfaceController
     {
-        public ActionResult RenderLogin()
+
+        public MemberController() {
+            //int a = 1;
+        }
+
+        public ActionResult RenderLogin(string returnUrl)
         {
-            return PartialView("~/Views/Authentication/_Login.cshtml", new LoginModel());
+            var model = new LoginModel
+            {
+                ReturnUrl = returnUrl
+            };
+            return PartialView("~/Views/Authentication/_Login.cshtml", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult SubmitLogin(LoginModel model, string returnUrl)
         {
+            if (string.IsNullOrWhiteSpace(returnUrl))
+            {
+                returnUrl = "/dashboard/";
+            }
+
             if (ModelState.IsValid)
             {
                 if (Membership.ValidateUser(model.Username, model.Password))
@@ -28,7 +42,7 @@ namespace Acme.UI.Controllers.Authentication
                     }
                     else
                     {
-                        return Redirect("/login/");
+                        return RenderLogout("/");
                     }
                 }
                 else
@@ -39,17 +53,24 @@ namespace Acme.UI.Controllers.Authentication
             return CurrentUmbracoPage();
         }
 
-        public ActionResult RenderLogout()
+        
+        public ActionResult RenderLogout(string returnUrl)
         {
-            return PartialView("~/Views/Authentication/_Logout.cshtml", null);
+            if (string.IsNullOrWhiteSpace(returnUrl))
+            {
+                returnUrl = "/";
+            }
+
+            return PartialView("~/Views/Authentication/_Logout.cshtml", returnUrl);
         }
 
-        public ActionResult SubmitLogout()
+        [HttpPost]
+        public ActionResult SubmitLogout(string returnUrl)
         {
             TempData.Clear();
             Session.Clear();
             FormsAuthentication.SignOut();
-            return RedirectToCurrentUmbracoPage();
+            return Redirect(returnUrl);
         }
     }
 }

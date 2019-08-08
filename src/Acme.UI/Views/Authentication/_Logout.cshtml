@@ -1,12 +1,14 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
-
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<string>
 @using Umbraco.Web
+
 
 @if (Umbraco.MemberIsLoggedOn())
 {
-    using (Html.BeginUmbracoForm("SubmitLogout", "Member", System.Web.Mvc.FormMethod.Post, new { id = "logout" }))
+
+    using (Html.BeginForm("SubmitLogout", "Member", System.Web.Mvc.FormMethod.Post, new { id = "logout" }))
     {
         @Html.AntiForgeryToken()
+        @Html.Hidden("returnUrl", "/")
         var user = System.Web.Security.Membership.GetUser();
         if (user != null)
         {
