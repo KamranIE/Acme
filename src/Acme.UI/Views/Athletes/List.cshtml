@@ -1,9 +1,25 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<System.Int32>
+﻿@using Examine;
+@using Umbraco.Examine;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<List<Umbraco.Web.PublishedModels.Athlete>>
 
 @using Umbraco.Web
 
 @if (Umbraco.MemberIsLoggedOn())
 {
+    var url = "\\";
+    var assignedItem = this.Umbraco.AssignedContentItem;
+    if (assignedItem != null)
+    {
+        url = assignedItem.Url;
+
+        if (url[url.Length - 1] != '/' && url[url.Length - 1] != '\\')
+        {
+            url += "/";
+        }
+
+        url += "athlete";
+    }
 
     var member = Members.GetCurrentMember();
 
@@ -16,7 +32,19 @@
 
         if (loggedInMember != null)
         {
-            <div style="color:silver; font-size:large">Welcome <b>@loggedInMember.Physio_name</b>-[Node Id: @nodeID]-[Allowed Athletes: @Model]</div>
+            <div style="color:silver; font-size:large">Welcome <b>@loggedInMember.Physio_name</b></div>
+
+            if (@Model?.Any() == true)
+            {
+                <b>You have seen following athletes1:</b>
+                <ul>
+                    @foreach (var athlete in Model)
+                    {
+                        var newUrl = url + "?id=" + athlete.Id;
+                        <li><a href="@newUrl">@athlete.Name</a></li>
+                    }
+                </ul>
+            }
         }
         else
         {
@@ -24,3 +52,4 @@
         }
     }
 }
+

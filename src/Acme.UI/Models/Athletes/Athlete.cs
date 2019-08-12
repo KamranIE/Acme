@@ -5,7 +5,9 @@ using System.Web;
 
 namespace Acme.UI.Models.Athletes
 {
-    public class Athlete
+    public class AthleteResult
     {
+        public string Name { get; set; }
+        public string Url { get; set; }
     }
 }

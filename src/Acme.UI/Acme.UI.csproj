@@ -45,7 +45,7 @@
   <ItemGroup>
     <Reference Include="Examine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Bin\Examine.dll</HintPath>
+      <HintPath>..\..\UmbracoCms.8.1.1\bin\Examine.dll</HintPath>
     </Reference>
     <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -90,6 +90,10 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="Umbraco.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="Umbraco.Examine, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Examine.dll</HintPath>
+    </Reference>
     <Reference Include="Umbraco.Web">
       <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Web.dll</HintPath>
     </Reference>
@@ -132,6 +136,7 @@
     <Content Include="Views\Athletes\List.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Partial Views\Navigation\TopNavigation.cshtml" />
+    <Content Include="Views\Athletes\Athlete.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>
@@ -139,6 +144,8 @@
   <ItemGroup>
     <Compile Include="Controllers\Authentication\MemberController.cs" />
     <Compile Include="Controllers\Business\AthletesController.cs" />
+    <Compile Include="Infrastructure\Handlers\PublishHandler.cs" />
+    <Compile Include="Infrastructure\Routing\AcmeRouter.cs" />
     <Compile Include="Models\Athletes\Athlete.cs" />
     <Compile Include="Models\Authentication\LoginModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -153,9 +160,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Member\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -1,0 +1,41 @@
+﻿
+@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Web.PublishedModels.Athlete>
+@using Umbraco.Web;
+
+@{
+    var name = Model.Name;
+    var person = name;
+    if (Model.Gender == "Male")
+    {
+        person = "He";
+    }
+    else if (Model.Gender == "Female")
+    {
+        person = "She";
+    }
+
+    <script>
+        var x = document.getElementsByClassName("no-air");
+        if (x !== null) {
+            for (let i = 0; i < x.length; i++) {
+                if (x[i].tagName == "h1" || x[i].tagName == "H1") {
+                    x[i].innerHTML = "@Model.Name";
+                }
+            }
+        }
+        
+    </script>
+}
+
+@if (Model.SportType != null && Model.SportType.Any())
+{
+
+    <div>@person plays:</div>
+    <ul>
+        @foreach (var sport in Model.SportType)
+        {
+            <li>@sport</li>
+        }
+    </ul>
+}

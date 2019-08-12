@@ -1,3 +1,8 @@
 /UmbracoCms.8.1.1
 /src/.vs
 /src/Acme.UI/obj
+/src/Acme.UI/bin
+/src/Acme.Umbraco.Models/bin
+/src/Acme.Umbraco.Models/obj
+/src/packages
+
