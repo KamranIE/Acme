@@ -1,0 +1,26 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<System.Int32>
+
+@using Umbraco.Web
+
+@if (Umbraco.MemberIsLoggedOn())
+{
+
+    var member = Members.GetCurrentMember();
+
+    var value = member.Properties.FirstOrDefault(x => x.Alias == "memberDataFolder");
+    var nodeID = member.GetProperty("memberDataFolder").Value<Umbraco.Core.Models.PublishedContent.IPublishedContent>().Id.ToString();
+
+    if (value != null)
+    {
+        var loggedInMember = value.GetValue() as Umbraco.Web.PublishedModels.Physiotherapist;
+
+        if (loggedInMember != null)
+        {
+            <div style="color:silver; font-size:large">Welcome <b>@loggedInMember.Physio_name</b>-[Node Id: @nodeID]-[Allowed Athletes: @Model]</div>
+        }
+        else
+        {
+            <div style="color:silver; font-size:large"><b>Logged in user not found</b></div>
+        }
+    }
+}

@@ -1,0 +1,8 @@
+UmbracoCms.8.1.1/*
+/src/.vs
+/src/*/obj/*
+/src/*/bin/*
+/src/packages
+/src/Acme.UI/fonts
+/NuCache*
+
