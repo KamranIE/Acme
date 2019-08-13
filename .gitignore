@@ -1,3 +1,7 @@
 /UmbracoCms.8.1.1
 /src/.vs
+/src/Acme.UI/obj
+/src/Acme.UI/bin
+/src/packages
+/src/Acme.UI/fonts
 
