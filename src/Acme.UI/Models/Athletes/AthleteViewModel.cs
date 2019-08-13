@@ -3,9 +3,9 @@ using Umbraco.Web.PublishedModels;
 
 namespace Acme.UI.Models.Athletes
 {
-    public class AthleteDetails : Athlete
+    public class AthleteViewModel : Athlete
     {
-       public AthleteDetails(IPublishedContent content) : base(content)
+       public AthleteViewModel(IPublishedContent content) : base(content)
        {
        }
 
