@@ -106,10 +106,10 @@ Also besides Acme solution and projects the \UmbracoCms.8.1.1\App_Data\Models fo
 
 
 ## TODO Tasks
-1. Replace View code with ViewModels properties as much as possible
-2. Use strongly typed properties rather then string name based accessors.
-3. Physiotherapist Registration Page
-4. Assessment Form
-5. Athelete registration
-6. Umbraco Auto-Reindexing 
-7. Umbraco pipeline hendlers to obverride urls
+
+1. Configure Examine to auto re-index
+1. Physiotherapist Registration Page
+1. Dependency Injection
+1. Investigate custom urls without content that backs it, This will look into pipelines
+1. Capture form (Assessment Form)
+1. Define a custgom index and/or custom index field.
