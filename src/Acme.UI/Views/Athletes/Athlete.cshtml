@@ -1,0 +1,29 @@
+﻿@using Acme.UI.Models.Athletes;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<AthleteDetails>
+@using Umbraco.Web;
+
+    <script>
+        var elements = document.getElementsByClassName("no-air");
+
+        if (elements) {
+            for (let element of elements) {
+                if (element.tagName == "h1" || element.tagName == "H1") {
+                    element.innerHTML = "@Model.Name";
+                }
+            }
+        }
+
+    </script>
+ 
+    @if (Model.SportType != null && Model.SportType.Any())
+    {
+
+    <div>@Model.Salutation plays:</div>
+    <ul>
+        @foreach (var sport in Model.SportType)
+        {
+        <li>@sport</li>
+        }
+    </ul>
+    }
