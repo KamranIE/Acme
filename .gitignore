@@ -1,7 +1,9 @@
 /UmbracoCms.8.1.1
+!/UmbracoCms.8.1.1/App_Data/Models/*.cs
 /src/.vs
-/src/Acme.UI/obj
-/src/Acme.UI/bin
+/src/*/obj/*
+/src/*/bin/*
 /src/packages
 /src/Acme.UI/fonts
+/NuCache*
 
