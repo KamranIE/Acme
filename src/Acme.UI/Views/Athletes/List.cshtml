@@ -1,7 +1,8 @@
 ﻿@using Examine;
 @using Umbraco.Examine;
+@using Acme.UI.Models.Athletes;
 
-@inherits Umbraco.Web.Mvc.UmbracoViewPage<List<Umbraco.Web.PublishedModels.Athlete>>
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<List<AthleteDetails>>
 
 @using Umbraco.Web
 
@@ -32,7 +33,7 @@
 
         if (loggedInMember != null)
         {
-            <div style="color:silver; font-size:large">Welcome <b>@loggedInMember.Physio_name</b></div>
+            <div class="welcome-message">Welcome <b>@loggedInMember.Physio_name</b></div>
 
             if (@Model?.Any() == true)
             {
@@ -48,7 +49,7 @@
         }
         else
         {
-            <div style="color:silver; font-size:large"><b>Logged in user not found</b></div>
+            <div class="welcome-message"><b>Logged in user not found</b></div>
         }
     }
 }

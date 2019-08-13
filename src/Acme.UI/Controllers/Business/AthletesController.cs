@@ -5,20 +5,16 @@ using Umbraco.Web;
 using Umbraco.Web.Mvc;
 using Examine;
 using Umbraco.Examine;
+using Umbraco.Core.Models.PublishedContent;
+using Acme.UI.Models.Athletes;
 
 namespace Acme.UI.Controllers.Business
 {
     public class AthletesController : SurfaceController
     {
-        public ActionResult GetAthlete(Umbraco.Web.PublishedModels.Athlete athlete)
-        {
-            return View("~/Views/Athletes/Athlete.cshtml", athlete);
-        }
-
-
         public ActionResult AthleteDetails(int athleteId)
         {
-            var athlete = Umbraco.Content(athleteId);
+            var athlete = new AthleteDetails(Umbraco.Content(athleteId));
             return View("~/Views/Athletes/Athlete.cshtml", athlete);
         }
 
@@ -26,7 +22,8 @@ namespace Acme.UI.Controllers.Business
         public ActionResult List(int? maxAthletesToDisplay)
         {
             var logginPhysioNodeId = GetLoggedInPhysioNodeId();
-            var athletes = new List<Umbraco.Web.PublishedModels.Athlete>();
+            var athletes = new List<AthleteDetails>();
+
             if (logginPhysioNodeId != null)
             {
                 if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
@@ -40,7 +37,7 @@ namespace Acme.UI.Controllers.Business
                         {
                             if (item.Id != null)
                             {
-                                var node = Umbraco.Content(item.Id) as Umbraco.Web.PublishedModels.Athlete;
+                                var node = new AthleteDetails(Umbraco.Content(item.Id));
 
                                 athletes.Add(node);
                             }
@@ -49,7 +46,7 @@ namespace Acme.UI.Controllers.Business
                 }
             }
 
-            return View(maxAthletesToDisplay.HasValue ? athletes.Take(maxAthletesToDisplay.Value).ToList<Umbraco.Web.PublishedModels.Athlete>() : athletes);
+            return View(maxAthletesToDisplay.HasValue ? athletes.Take(maxAthletesToDisplay.Value).ToList() : athletes);
         }
 
         private int? GetLoggedInPhysioNodeId()
@@ -60,7 +57,7 @@ namespace Acme.UI.Controllers.Business
 
             if (value != null)
             {
-                return value.Value<Umbraco.Core.Models.PublishedContent.IPublishedContent>().Id;
+                return value.Value<IPublishedContent>().Id;
             }
 
             return null;

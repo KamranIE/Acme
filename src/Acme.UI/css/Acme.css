@@ -28,3 +28,9 @@
         position: relative;
         left: 35%;
     }
+
+    .welcome-message {
+        color: silver;
+        font-size: large;
+        background-color: lightgoldenrodyellow;
+    }

@@ -22,7 +22,7 @@ namespace Acme.UI.Infrastructure.Handlers
 
         public void Initialize()
         {
-            // ContentService.Published += this.OnPublish;
+            ContentService.Published += this.OnPublish;
         }
 
         public void Terminate()

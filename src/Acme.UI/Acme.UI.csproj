@@ -118,12 +118,14 @@
     <Compile Include="Controllers\Business\AthletesController.cs" />
     <Compile Include="Infrastructure\Handlers\PublishHandler.cs" />
     <Compile Include="Infrastructure\Routing\AcmeRouter.cs" />
+    <Compile Include="Models\Athletes\AthleteDetails.cs" />
     <Compile Include="Models\Authentication\LoginModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\LocalDev.pubxml" />
+    <Content Include="Views\Athletes\Athlete.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
