@@ -1,5 +1,4 @@
-/UmbracoCms.8.1.1
-!/UmbracoCms.8.1.1/App_Data/Models/*.cs
+UmbracoCms.8.1.1/*
 /src/.vs
 /src/*/obj/*
 /src/*/bin/*
