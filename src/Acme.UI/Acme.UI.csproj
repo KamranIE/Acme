@@ -108,8 +108,8 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Athletes\List.cshtml" />
     <Content Include="Views\Partial Views\Navigation\TopNavigation.cshtml" />
-    <None Include="Web.config">
-    <Content Include="Web.config">      <SubType>Designer</SubType>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
