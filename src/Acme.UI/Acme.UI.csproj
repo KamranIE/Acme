@@ -101,6 +101,7 @@
     <Content Include="css\Acme.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="css\umbraco-starterkit-style.css" />
     <Content Include="Views\BusinessPages\Authentication\_Login.cshtml" />
     <Content Include="Views\BusinessPages\Authentication\_Logout.cshtml" />
     <Content Include="Views\Web.config" />
