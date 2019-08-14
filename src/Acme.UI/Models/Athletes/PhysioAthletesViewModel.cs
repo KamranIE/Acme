@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Acme.UI.Helper.Extensions;
+using System.Collections.Generic;
 using System.Linq;
 using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Web.PublishedModels;
@@ -9,39 +10,31 @@ namespace Acme.UI.Models.Athletes
     {
         private List<AthleteViewModel> _athletes;
 
-        private PhysioAthletesViewModel(IPublishedContent containerItem, Physiotherapist physio, int maxAthletesToDisplay)
+        private PhysioAthletesViewModel(IPublishedContent containerItem, string physioName, int maxAthletesToDisplay)
         {
             _athletes = new List<AthleteViewModel>();
             MaxAthletesToDisplay = maxAthletesToDisplay;
             if (containerItem != null)
             {
-                SetUpBaseUrl(containerItem.Url);
+                BaseUrl = GetBaseUrl(containerItem.Url);
             }
-            SetupPhysioDataData(physio);
+            PhysioName = physioName; 
         }
 
-        private void SetUpBaseUrl(string url)
+        private string GetBaseUrl(string url)
         {
-            if (url != null)
+            if (!url.IsNull())
             {
-                BaseUrl = url;
                 var lastChar = url.Last();
 
                 if (lastChar != '/' && lastChar != '\\')
                 {
-                    BaseUrl += "/";
+                    url += "/";
                 }
 
-                BaseUrl += "athlete";
+                url += "athlete";
             }
-        }
-
-        private void SetupPhysioDataData(Physiotherapist physio)
-        {
-            if (physio != null)
-            {
-                PhysioName = physio.Physio_name;
-            }
+            return url;
         }
 
         public void AddAthlete(AthleteViewModel athlete)
@@ -73,7 +66,7 @@ namespace Acme.UI.Models.Athletes
             var assignedItem = umbraco.AssignedContentItem;
             var physio = umbraco.Content(physioNodeId) as Physiotherapist;
 
-            return new PhysioAthletesViewModel(assignedItem, physio, maxAthletesToDisplay ?? 0);
+            return new PhysioAthletesViewModel(assignedItem, physio?.Physio_name, maxAthletesToDisplay ?? 0);
         }
     }
 }

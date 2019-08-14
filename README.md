@@ -84,16 +84,7 @@ _**Note: Above lines are necessary to kill the VBCSCompiler before you start bui
  
 ---
 ## Git setup
-The git is setup to ignore following files: 
-1. `UmbracoCms.8.1.1/*`
-2. `/src/.vs`
-3. `/src/*/obj/*`
-4. `/src/*/bin/*`
-5. `/src/packages`
-6. `/src/Acme.UI/fonts`
-7. `/NuCache*`
-
-Also besides Acme solution and projects the \UmbracoCms.8.1.1\App_Data\Models folder is included to be checked in. What that means is in case of any changes in the document types (addition, deletion or modification of properties or document types themselves), you need to do following:
+Along with Acme solution and projects the \UmbracoCms.8.1.1\App_Data\Models folder is included to be checked in. What that means is in case of any changes in the document types (addition, deletion or modification of properties or document types themselves), you need to do following:
 1. If there is/are new document type(s)
 	1. Add it to git changeset
 	2. Include it to Acme.Umbraco.Models as existing item and with same properties as other models in that project.
@@ -106,7 +97,6 @@ Also besides Acme solution and projects the \UmbracoCms.8.1.1\App_Data\Models fo
 
 
 ## TODO Tasks
-
 1. Configure Examine to auto re-index
 1. Physiotherapist Registration Page
 1. Dependency Injection
