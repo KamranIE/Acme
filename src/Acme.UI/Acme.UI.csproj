@@ -116,9 +116,11 @@
   <ItemGroup>
     <Compile Include="Controllers\Authentication\MemberController.cs" />
     <Compile Include="Controllers\Business\AthletesController.cs" />
+    <Compile Include="Helper\Extensions\StringExtension.cs" />
     <Compile Include="Infrastructure\Handlers\PublishHandler.cs" />
     <Compile Include="Infrastructure\Routing\AcmeRouter.cs" />
-    <Compile Include="Models\Athletes\AthleteDetails.cs" />
+    <Compile Include="Models\Athletes\AthleteViewModel.cs" />
+    <Compile Include="Models\Athletes\PhysioAthletesViewModel.cs" />
     <Compile Include="Models\Authentication\LoginModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

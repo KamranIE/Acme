@@ -1,55 +1,23 @@
-﻿@using Examine;
-@using Umbraco.Examine;
-@using Acme.UI.Models.Athletes;
+﻿@using Acme.UI.Models.Athletes;
 
-@inherits Umbraco.Web.Mvc.UmbracoViewPage<List<AthleteDetails>>
-
-@using Umbraco.Web
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PhysioAthletesViewModel>
 
 @if (Umbraco.MemberIsLoggedOn())
 {
-    var url = "\\";
-    var assignedItem = this.Umbraco.AssignedContentItem;
-    if (assignedItem != null)
+    if (Model != null)
     {
-        url = assignedItem.Url;
+        <div class="welcome-message">Welcome <b>@Model.PhysioName</b></div>
 
-        if (url[url.Length - 1] != '/' && url[url.Length - 1] != '\\')
+        if (Model.DisplayableAthletes != null && Model.DisplayableAthletes.Count > 0)
         {
-            url += "/";
-        }
-
-        url += "athlete";
-    }
-
-    var member = Members.GetCurrentMember();
-
-    var value = member.Properties.FirstOrDefault(x => x.Alias == "memberDataFolder");
-    var nodeID = member.GetProperty("memberDataFolder").Value<Umbraco.Core.Models.PublishedContent.IPublishedContent>().Id.ToString();
-
-    if (value != null)
-    {
-        var loggedInMember = value.GetValue() as Umbraco.Web.PublishedModels.Physiotherapist;
-
-        if (loggedInMember != null)
-        {
-            <div class="welcome-message">Welcome <b>@loggedInMember.Physio_name</b></div>
-
-            if (@Model?.Any() == true)
-            {
-                <b>You have seen following athletes1:</b>
-                <ul>
-                    @foreach (var athlete in Model)
-                    {
-                        var newUrl = url + "?id=" + athlete.Id;
-                        <li><a href="@newUrl">@athlete.Name</a></li>
-                    }
-                </ul>
-            }
-        }
-        else
-        {
-            <div class="welcome-message"><b>Logged in user not found</b></div>
+            <b>You have seen following athletes:</b>
+            <ul>
+                @foreach (var athlete in Model.DisplayableAthletes)
+                {
+                    var newUrl = Model.BaseUrl + "?id=" + athlete.Id;
+                    <li><a href="@newUrl">@athlete.Name</a></li>
+                }
+            </ul>
         }
     }
 }

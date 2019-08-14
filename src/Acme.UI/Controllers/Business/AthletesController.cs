@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
-using Umbraco.Web;
 using Umbraco.Web.Mvc;
 using Examine;
 using Umbraco.Examine;
-using Umbraco.Core.Models.PublishedContent;
 using Acme.UI.Models.Athletes;
+using Umbraco.Web.PublishedModels;
 
 namespace Acme.UI.Controllers.Business
 {
@@ -14,16 +12,16 @@ namespace Acme.UI.Controllers.Business
     {
         public ActionResult AthleteDetails(int athleteId)
         {
-            var athlete = new AthleteDetails(Umbraco.Content(athleteId));
+            var athlete = new AthleteViewModel(Umbraco.Content(athleteId));
             return View("~/Views/Athletes/Athlete.cshtml", athlete);
         }
 
-        // GET: Athletes
         public ActionResult List(int? maxAthletesToDisplay)
         {
             var logginPhysioNodeId = GetLoggedInPhysioNodeId();
-            var athletes = new List<AthleteDetails>();
-
+            
+            var physioAthletesViewModel = PhysioAthletesViewModel.Create(Umbraco, logginPhysioNodeId ?? 0, maxAthletesToDisplay);
+            
             if (logginPhysioNodeId != null)
             {
                 if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
@@ -37,30 +35,21 @@ namespace Acme.UI.Controllers.Business
                         {
                             if (item.Id != null)
                             {
-                                var node = new AthleteDetails(Umbraco.Content(item.Id));
-
-                                athletes.Add(node);
+                                physioAthletesViewModel.AddAthlete(new AthleteViewModel(Umbraco.Content(item.Id)));
                             }
                         }
                     }
                 }
             }
 
-            return View(maxAthletesToDisplay.HasValue ? athletes.Take(maxAthletesToDisplay.Value).ToList() : athletes);
+            return View(physioAthletesViewModel);
         }
 
         private int? GetLoggedInPhysioNodeId()
         {
-            var member = Members.GetCurrentMember();
-
-            var value = member.Properties.FirstOrDefault(x => x.Alias == "memberDataFolder");
-
-            if (value != null)
-            {
-                return value.Value<IPublishedContent>().Id;
-            }
-
-            return null;
+            var member = Members.GetCurrentMember() as Member;
+            
+            return member?.MemberDataFolder?.Id;
         }
     }
 }
