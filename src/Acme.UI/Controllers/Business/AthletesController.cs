@@ -13,7 +13,7 @@ namespace Acme.UI.Controllers.Business
         public ActionResult AthleteDetails(int athleteId)
         {
             var athlete = new AthleteViewModel(Umbraco.Content(athleteId));
-            return View("~/Views/Athletes/Athlete.cshtml", athlete);
+            return View("~/Views/BusinessPages/Athletes/Athlete.cshtml", athlete);
         }
 
         public ActionResult List(int? maxAthletesToDisplay)
@@ -42,7 +42,7 @@ namespace Acme.UI.Controllers.Business
                 }
             }
 
-            return View(physioAthletesViewModel);
+            return View("~/Views/BusinessPages/Athletes/List.cshtml", physioAthletesViewModel);
         }
 
         private int? GetLoggedInPhysioNodeId()

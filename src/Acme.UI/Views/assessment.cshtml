@@ -1,0 +1,17 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+	Layout = null;
+}
+
+<section class="section">
+
+    <div class="container">
+        @Umbraco.RenderMacro("GetAllPhysioNames",
+            new
+            {
+                physiosContainerNodeId = Model.PhysiosContainerNodeId
+            })
+    </div>
+
+</section>
+

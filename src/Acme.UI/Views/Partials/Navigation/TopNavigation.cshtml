@@ -1,6 +1,6 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
 @using Umbraco.Web;
-@{
+@{ 
     var site = Model.Root();
     var selection = site.Children.Where(x => x.IsVisible());
 }
@@ -13,7 +13,13 @@
 
 @if (!Umbraco.MemberIsLoggedOn())
 {
-    <span>
-         @Html.ActionLink("Login", "RenderLogin", "Member", new { returnUrl = "/dashboard/" }, new { Style = "color:silver; font:bold" }) 
-    </span>
+<span>
+    <a class="nav-link nav-link--active" href="/login/">Login</a>
+</span>
+}
+else
+{
+<span>
+    @Html.ActionLink("Logout", "SubmitLogout", new { controller = "Member", returnUrl = "/" }, new {@class="nav-link nav-link--active"})
+</span>
 }

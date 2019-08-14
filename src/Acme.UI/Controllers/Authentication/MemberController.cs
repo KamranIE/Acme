@@ -13,7 +13,8 @@ namespace Acme.UI.Controllers.Authentication
             {
                 ReturnUrl = returnUrl
             };
-            return PartialView("~/Views/Authentication/_Login.cshtml", model);
+
+            return PartialView("~/Views/BusinessPages/Authentication/_Login.cshtml", model);
         }
 
         [HttpPost]
@@ -37,7 +38,7 @@ namespace Acme.UI.Controllers.Authentication
                     }
                     else
                     {
-                        return RenderLogout("/");
+                        return Redirect("/");
                     }
                 }
                 else
@@ -56,7 +57,7 @@ namespace Acme.UI.Controllers.Authentication
                 returnUrl = "/";
             }
 
-            return PartialView("~/Views/Authentication/_Logout.cshtml", returnUrl);
+            return PartialView("~/Views/BusinessPages/Authentication/_Logout.cshtml", returnUrl);
         }
 
         public ActionResult SubmitLogout(string returnUrl)

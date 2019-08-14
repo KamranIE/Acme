@@ -1,0 +1,6 @@
+﻿@using Umbraco.Web;
+@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@{
+    var id = HttpContext.Current.Request.QueryString["id"];
+    @Html.Action("AthleteDetails", "Athletes", new {athleteId = @id})
+}
