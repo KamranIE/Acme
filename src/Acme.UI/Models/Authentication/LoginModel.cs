@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 namespace Acme.UI.Models.Authentication
 {
     public class LoginModel

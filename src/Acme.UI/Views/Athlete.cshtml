@@ -1,0 +1,15 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Athlete>
+@using Umbraco.Web;
+@{
+    Layout = "master.cshtml";
+}
+@Html.Partial("~/Views/Partials/SectionHeader.cshtml")
+
+<section class="section">
+
+    <div class="container">
+        @Html.Action("GetAthlete", "Athletes", new {athlete = @Model})
+    </div>
+
+</section>

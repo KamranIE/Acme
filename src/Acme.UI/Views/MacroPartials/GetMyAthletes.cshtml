@@ -1,0 +1,11 @@
+﻿@using Umbraco.Web;
+@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@{
+    var maxAthletesToDisplay = 0;
+    if (Model.MacroParameters["maxAthletesToDisplay"] != null)
+    {
+        int.TryParse((string)Model.MacroParameters["maxAthletesToDisplay"], out maxAthletesToDisplay);
+    }
+
+    @Html.Action("List", "Athletes", new {maxAthletesToDisplay = @maxAthletesToDisplay}) 
+}
