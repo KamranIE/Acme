@@ -107,6 +107,7 @@
     <Compile Include="Models\Physiotherapists.generated.cs" />
     <Compile Include="Models\Product.generated.cs" />
     <Compile Include="Models\Products.generated.cs" />
+    <Compile Include="Models\Register.generated.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

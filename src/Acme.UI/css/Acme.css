@@ -23,6 +23,20 @@
         left: -30%;
     }
 
+    .button-container {
+        text-align:center;
+    }
+
+    .register {
+        margin-top: 20px;
+    }
+
+    .register-container {
+    width: 400px;
+    position: relative;
+    left: 35%;
+}
+
     .login-container {
         width:300px;
         position: relative;

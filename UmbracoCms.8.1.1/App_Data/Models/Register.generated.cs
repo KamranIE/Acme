@@ -20,58 +20,65 @@ using Umbraco.ModelsBuilder.Umbraco;
 
 namespace Umbraco.Web.PublishedModels
 {
-	/// <summary>Athlete</summary>
-	[PublishedModel("athlete")]
-	public partial class Athlete : PublishedContentModel, IContentBase, INavigationBase
+	/// <summary>Register</summary>
+	[PublishedModel("register")]
+	public partial class Register : PublishedContentModel, IContentBase, INavigationBase
 	{
 		// helpers
 #pragma warning disable 0109 // new is redundant
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
-		public new const string ModelTypeAlias = "athlete";
+		public new const string ModelTypeAlias = "register";
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
 		public new const PublishedItemType ModelItemType = PublishedItemType.Content;
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
 		public new static IPublishedContentType GetModelContentType()
 			=> PublishedModelUtility.GetModelContentType(ModelItemType, ModelTypeAlias);
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
-		public static IPublishedPropertyType GetModelPropertyType<TValue>(Expression<Func<Athlete, TValue>> selector)
+		public static IPublishedPropertyType GetModelPropertyType<TValue>(Expression<Func<Register, TValue>> selector)
 			=> PublishedModelUtility.GetModelPropertyType(GetModelContentType(), selector);
 #pragma warning restore 0109
 
 		// ctor
-		public Athlete(IPublishedContent content)
+		public Register(IPublishedContent content)
 			: base(content)
 		{ }
 
 		// properties
 
 		///<summary>
-		/// Name: Athlete Name
+		/// Confirm Password Title
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
-		[ImplementPropertyType("athleteName")]
-		public string AthleteName => this.Value<string>("athleteName");
+		[ImplementPropertyType("confirmPasswordTitle")]
+		public string ConfirmPasswordTitle => this.Value<string>("confirmPasswordTitle");
 
 		///<summary>
-		/// Date Of Birth
+		/// Display Name Title
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
-		[ImplementPropertyType("dateOfBirth")]
-		public DateTime DateOfBirth => this.Value<DateTime>("dateOfBirth");
+		[ImplementPropertyType("displayNameTitle")]
+		public string DisplayNameTitle => this.Value<string>("displayNameTitle");
 
 		///<summary>
-		/// Gender
+		/// Email Title
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
-		[ImplementPropertyType("gender")]
-		public string Gender => this.Value<string>("gender");
+		[ImplementPropertyType("emailTitle")]
+		public string EmailTitle => this.Value<string>("emailTitle");
 
 		///<summary>
-		/// Sport Type
+		/// Password Title
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
-		[ImplementPropertyType("sportType")]
-		public IEnumerable<string> SportType => this.Value<IEnumerable<string>>("sportType");
+		[ImplementPropertyType("passwordTitle")]
+		public string PasswordTitle => this.Value<string>("passwordTitle");
+
+		///<summary>
+		/// User Name Title
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
+		[ImplementPropertyType("userNameTitle")]
+		public string UserNameTitle => this.Value<string>("userNameTitle");
 
 		///<summary>
 		/// Content

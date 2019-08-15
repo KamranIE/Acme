@@ -121,6 +121,7 @@
     <Compile Include="Models\Athletes\AthleteViewModel.cs" />
     <Compile Include="Models\Athletes\PhysioAthletesViewModel.cs" />
     <Compile Include="Models\Authentication\LoginModel.cs" />
+    <Compile Include="Models\Authentication\MemberViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +151,8 @@
     <Content Include="Views\MacroPartials\FeaturedProducts.cshtml" />
     <Content Include="Views\MacroPartials\GetMyAthletes.cshtml" />
     <Content Include="Views\MacroPartials\LatestBlogposts.cshtml" />
+    <Content Include="Views\Register.cshtml" />
+    <Content Include="Views\BusinessPages\Authentication\_Registration.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

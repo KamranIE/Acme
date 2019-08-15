@@ -1,0 +1,38 @@
+﻿@using Umbraco.Web;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<Acme.UI.Models.Authentication.MemberViewModel>
+
+@using (Html.BeginUmbracoForm("SubmitRegistration", "Member", System.Web.Mvc.FormMethod.Post, new { id = "registration", @class = "form-register form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+<div class="form-group register-container">
+    <div>
+        <label class="control-label col-sm-5">@Model.DisplayNameTitle</label>
+        @Html.TextBoxFor(m => m.DisplayName, new { @class = "col-sm-7" })
+        @Html.Hidden("DisplayNameTitle", @Model.DisplayNameTitle)
+    </div>
+    <div>
+        <label class="control-label col-sm-5">@Model.UserNameTitle</label>
+        @Html.TextBoxFor(m => m.UserName, new { @class = "col-sm-7" })
+        @Html.Hidden("UserNameTitle", @Model.UserNameTitle)
+    </div>
+    <div>
+        <label class="control-label col-sm-5">@Model.EmailTitle</label>
+        @Html.TextBoxFor(m => m.Email, new { type = "email", @class = "col-sm-7" })
+        @Html.Hidden("EmailTitle", @Model.EmailTitle)
+    </div>
+    <div>
+        <label class="control-label col-sm-5">@Model.PasswordTitle</label>
+        @Html.PasswordFor(m => m.Password, new { @class = "col-sm-7" })
+        @Html.Hidden("PasswordTitle", @Model.PasswordTitle)
+    </div>
+    <div>
+        <label class="control-label col-sm-5">@Model.ConfirmPasswordTitle</label>
+        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "col-sm-7" })
+        @Html.Hidden("ConfirmPasswordTitle", @Model.ConfirmPasswordTitle)
+    </div>
+    @Html.ValidationSummary()
+    <div class="button-container">
+        <button name="register" type="submit" class="button-style register">Register</button>
+    </div>
+</div>
+}

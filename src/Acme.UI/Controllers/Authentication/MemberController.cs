@@ -2,6 +2,9 @@
 using Umbraco.Web.Mvc;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Linq;
+using Umbraco.Web.PublishedModels;
+using Umbraco.Web.Models;
 
 namespace Acme.UI.Controllers.Authentication
 {
@@ -9,7 +12,7 @@ namespace Acme.UI.Controllers.Authentication
     {
         public ActionResult RenderLogin(string returnUrl)
         {
-            var model = new LoginModel
+            var model = new Models.Authentication.LoginModel
             {
                 ReturnUrl = returnUrl
             };
@@ -19,7 +22,7 @@ namespace Acme.UI.Controllers.Authentication
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitLogin(LoginModel model, string returnUrl)
+        public ActionResult SubmitLogin(Models.Authentication.LoginModel model, string returnUrl)
         {
             if (string.IsNullOrWhiteSpace(returnUrl))
             {
@@ -66,6 +69,72 @@ namespace Acme.UI.Controllers.Authentication
             Session.Clear();
             FormsAuthentication.SignOut();
             return Redirect(returnUrl);
+        }
+
+        public ActionResult RenderRegistration()
+        {
+            var register= this.Umbraco.AssignedContentItem as Register;
+
+            var model = new MemberViewModel {
+                ConfirmPasswordTitle = register.ConfirmPasswordTitle,
+                DisplayNameTitle = register.DisplayNameTitle,
+                EmailTitle = register.EmailTitle,
+                PasswordTitle = register.PasswordTitle,
+                UserNameTitle = register.UserNameTitle
+            };
+
+            return PartialView("~/Views/BusinessPages/Authentication/_Registration.cshtml", model);
+        }
+
+        public ActionResult SubmitRegistration(MemberViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // check if user exists already
+                var member = Services.MemberService.FindByUsername(model.UserName, 0, 1, out var totalRecs);
+
+                if (member != null && member.Any())
+                {
+                    ModelState.AddModelError("UserAlreadyExists", "User " + model.UserName + "already exists");
+                }
+                else
+                {
+                    model.IsApproved = false;
+                    var user = Members.RegisterMember(model.RegisterModel, out var status, false);
+                    
+                    if (!HasRegisterMemberErrors(status))
+                    {
+                        return Redirect("/login/");
+                    }
+                }
+            }
+            return CurrentUmbracoPage();
+
+        }
+
+        private bool HasRegisterMemberErrors(MembershipCreateStatus status)
+        {
+            switch (status)
+            {
+                case MembershipCreateStatus.DuplicateEmail:
+                    ModelState.AddModelError("DuplicateEmail", "Email is already registered with someother user");
+                    return true;
+                case MembershipCreateStatus.DuplicateUserName:
+                    ModelState.AddModelError("DuplicateUserName", "User name is already registered");
+                    return true;
+                case MembershipCreateStatus.InvalidEmail:
+                    ModelState.AddModelError("InvalidEmail", "Email is invalid");
+                    return true;
+
+                case MembershipCreateStatus.InvalidPassword:
+                    ModelState.AddModelError("InvalidPassword", "Password is invalid");
+                    return true;
+
+                case MembershipCreateStatus.UserRejected:
+                    ModelState.AddModelError("UserRejected", "User is rejected");
+                    return true;
+            }
+            return false;
         }
     }
 }
