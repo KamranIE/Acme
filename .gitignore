@@ -2,7 +2,6 @@ UmbracoCms.8.1.1/*
 /src/.vs
 /src/*/obj/*
 /src/*/bin/*
-/src/*/*pubxml.user
-/src/packages
+/src/**/*.pubxml.user/src/packages
 /src/Acme.UI/fonts
 /NuCache*
