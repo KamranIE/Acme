@@ -5,11 +5,19 @@ using System.Web.Security;
 using System.Linq;
 using Umbraco.Web.PublishedModels;
 using Umbraco.Web.Models;
+using Umbraco.Core.Services;
 
 namespace Acme.UI.Controllers.Authentication
 {
     public class MemberController : SurfaceController
     {
+        private IMemberService _memberService;
+
+        public MemberController(IMemberService service)
+        {
+            _memberService = service;
+        }
+
         public ActionResult RenderLogin(string returnUrl)
         {
             var model = new Models.Authentication.LoginModel
@@ -80,7 +88,9 @@ namespace Acme.UI.Controllers.Authentication
                 DisplayNameTitle = register.DisplayNameTitle,
                 EmailTitle = register.EmailTitle,
                 PasswordTitle = register.PasswordTitle,
-                UserNameTitle = register.UserNameTitle
+                UserNameTitle = register.UserNameTitle,
+                AddressTitle = register.AddressTitle,
+                PhoneTitle = register.PhoneTitle
             };
 
             return PartialView("~/Views/BusinessPages/Authentication/_Registration.cshtml", model);
@@ -95,13 +105,15 @@ namespace Acme.UI.Controllers.Authentication
 
                 if (member != null && member.Any())
                 {
-                    ModelState.AddModelError("UserAlreadyExists", "User " + model.UserName + "already exists");
+                    ModelState.AddModelError("UserAlreadyExists", "User " + model.UserName + " already exists");
                 }
                 else
                 {
                     model.IsApproved = false;
                     var user = Members.RegisterMember(model.RegisterModel, out var status, false);
-                    
+
+                    _memberService.AssignRole(model.UserName, "Physiotherapist");
+
                     if (!HasRegisterMemberErrors(status))
                     {
                         return Redirect("/login/");

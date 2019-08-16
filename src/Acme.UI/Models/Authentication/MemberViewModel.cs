@@ -8,6 +8,9 @@ namespace Acme.UI.Models.Authentication
     public class MemberViewModel : IValidatableObject
     {
         private const string umbracoIsApprovedPropAlias = "umbracoMemberApproved";
+        private const string addressAlias = "address";
+        private const string phoneAlias = "phone";
+
 
         public MemberViewModel()
         {
@@ -66,6 +69,52 @@ namespace Acme.UI.Models.Authentication
             }
         }
 
+        public string Address
+        {
+            get
+            {
+                var found = RegisterModel.MemberProperties.FirstOrDefault(e => e.Alias == addressAlias);
+                if (found != null)
+                {
+                    return found.Value;
+                }
+                return null; 
+            }
+
+            set
+            {
+                var found = RegisterModel.MemberProperties.FirstOrDefault(e => e.Alias == addressAlias);
+                if (found != null)
+                {
+                    RegisterModel.MemberProperties.Remove(found);
+                }
+                RegisterModel.MemberProperties.Add(new UmbracoProperty { Alias = addressAlias, Value = value});
+            }
+        }
+
+        public string Phone
+        {
+            get
+            {
+                var found = RegisterModel.MemberProperties.FirstOrDefault(e => e.Alias == phoneAlias);
+                if (found != null)
+                {
+                    return found.Value;
+                }
+                return null;
+            }
+
+            set
+            {
+                var found = RegisterModel.MemberProperties.FirstOrDefault(e => e.Alias == phoneAlias);
+                if (found != null)
+                {
+                    RegisterModel.MemberProperties.Remove(found);
+                }
+                RegisterModel.MemberProperties.Add(new UmbracoProperty { Alias = phoneAlias, Value = value });
+            }
+        }
+
         public bool IsApproved
         {
             get
@@ -97,6 +146,10 @@ namespace Acme.UI.Models.Authentication
 
         public string EmailTitle { get; set; }
 
+        public string AddressTitle { get; set; }
+
+        public string PhoneTitle { get; set; }
+
         public string PasswordTitle { get; set; }
 
         public string ConfirmPasswordTitle { get; set; }
@@ -117,6 +170,16 @@ namespace Acme.UI.Models.Authentication
             if (string.IsNullOrWhiteSpace(Email))
             {
                 yield return new ValidationResult(EmailTitle + " is mandatory");
+            }
+
+            if (string.IsNullOrWhiteSpace(Address))
+            {
+                yield return new ValidationResult(AddressTitle + " is mandatory");
+            }
+
+            if (string.IsNullOrWhiteSpace(Phone))
+            {
+                yield return new ValidationResult(PhoneTitle + " is mandatory");
             }
 
             if (string.IsNullOrWhiteSpace(Password))

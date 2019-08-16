@@ -4,7 +4,7 @@
 @using (Html.BeginUmbracoForm("SubmitRegistration", "Member", System.Web.Mvc.FormMethod.Post, new { id = "registration", @class = "form-register form-horizontal" }))
 {
     @Html.AntiForgeryToken()
-<div class="form-group register-container">
+<div class="form-group register__container">
     <div>
         <label class="control-label col-sm-5">@Model.DisplayNameTitle</label>
         @Html.TextBoxFor(m => m.DisplayName, new { @class = "col-sm-7" })
@@ -30,9 +30,20 @@
         @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "col-sm-7" })
         @Html.Hidden("ConfirmPasswordTitle", @Model.ConfirmPasswordTitle)
     </div>
+    <div>
+        <label class="control-label col-sm-5">@Model.AddressTitle</label>
+        @Html.TextAreaFor(m => m.Address, new { @class = "col-sm-7 register__text-area" })
+        @Html.Hidden("AddressTitle", @Model.AddressTitle)
+    </div>
+    <div>
+        <label class="control-label col-sm-5">@Model.PhoneTitle</label>
+        @Html.TextBoxFor(m => m.Phone, new { @class = "col-sm-7" })
+        @Html.Hidden("PhoneTitle", @Model.PhoneTitle)
+    </div>
+
     @Html.ValidationSummary()
-    <div class="button-container">
-        <button name="register" type="submit" class="button-style register">Register</button>
+    <div class="shared__button-container">
+        <button name="register" type="submit" class="shared__button-style register__button">Register</button>
     </div>
 </div>
 }

@@ -46,6 +46,13 @@ namespace Umbraco.Web.PublishedModels
 		// properties
 
 		///<summary>
+		/// Address Title
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
+		[ImplementPropertyType("addressTitle")]
+		public string AddressTitle => this.Value<string>("addressTitle");
+
+		///<summary>
 		/// Confirm Password Title
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
@@ -72,6 +79,13 @@ namespace Umbraco.Web.PublishedModels
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
 		[ImplementPropertyType("passwordTitle")]
 		public string PasswordTitle => this.Value<string>("passwordTitle");
+
+		///<summary>
+		/// Phone Title
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
+		[ImplementPropertyType("phoneTitle")]
+		public string PhoneTitle => this.Value<string>("phoneTitle");
 
 		///<summary>
 		/// User Name Title

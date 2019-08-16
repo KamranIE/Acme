@@ -6,7 +6,7 @@
     using (Html.BeginUmbracoForm("SubmitLogin", "Member", System.Web.Mvc.FormMethod.Post, new { id = "login" }))
     {
         @Html.AntiForgeryToken()
-<div class="login-container">
+<div class="login__container">
     <div>
         @Html.LabelFor(m => m.Username)
         @Html.TextBoxFor(m => m.Username, new { placeholder = "Username" })
@@ -19,7 +19,7 @@
     @Html.Hidden("returnUrl", Model.ReturnUrl ?? "")
 
 
-    <button name="login" type="submit" class="button-style login">Login</button>
+    <button name="login" type="submit" class="shared__button-style login__button">Login</button>
 </div>
     }
 }
