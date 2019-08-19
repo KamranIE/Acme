@@ -100,24 +100,14 @@ namespace Acme.UI.Controllers.Authentication
         {
             if (ModelState.IsValid)
             {
-                // check if user exists already
-                var member = Services.MemberService.FindByUsername(model.UserName, 0, 1, out var totalRecs);
+                model.IsApproved = false;
+                var user = Members.RegisterMember(model.RegisterModel, out var status, false);
 
-                if (member != null && member.Any())
+                if (!HasRegisterMemberErrors(status))
                 {
-                    ModelState.AddModelError("UserAlreadyExists", "User " + model.UserName + " already exists");
-                }
-                else
-                {
-                    model.IsApproved = false;
-                    var user = Members.RegisterMember(model.RegisterModel, out var status, false);
-
                     _memberService.AssignRole(model.UserName, "Physiotherapist");
 
-                    if (!HasRegisterMemberErrors(status))
-                    {
-                        return Redirect("/login/");
-                    }
+                    return Redirect("/login/");
                 }
             }
             return CurrentUmbracoPage();

@@ -10,6 +10,8 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using Acme.UI.Helper.Extensions;
+using Published = Umbraco.Web.PublishedModels;
+using System.Linq.Expressions;
 
 namespace Acme.UI.Infrastructure.Handlers
 {
@@ -23,14 +25,15 @@ namespace Acme.UI.Infrastructure.Handlers
 
     public class MemberSaveHandler : IComponent
     {
-        private const string memberDataFolderAlias = "memberDataFolder";
-        private const string addressAlias = "address";
-        private const string phoneAlias = "phone";
+        private Published.Member _member;
+        private Published.Physiotherapist _physio;
 
         private IContentService _contentService;
         
         public MemberSaveHandler(IContentService contentService)
         {
+            _member = new Published.Member(null);
+            _physio = new Published.Physiotherapist(null);
             _contentService = contentService;
         }
 
@@ -50,22 +53,27 @@ namespace Acme.UI.Infrastructure.Handlers
                     if (member.IsApproved && MandatoryFieldsArePopulated(member))
                     {
                         // create tree structure
-                        var parentNodeIdAndKey = GetParentNodeIdAndKey();
-                        if (!string.IsNullOrWhiteSpace(parentNodeIdAndKey.Item1) && !nodeExists(parentNodeIdAndKey.Item1, member.Name))
-                        {
-                            var node = _contentService.Create(member.Name, Guid.Parse(parentNodeIdAndKey.Item2), "physiotherapist");
-                            node.SetValue("physio_name", member.Name);
-                            node.SetValue("physio_email", member.Email);
+                        var containerNodeIdAndKey = GetPhysiotherapistsContainerIdAndKey(); // we will (and should) have only one "Physiotherapists" content node to contain all the nodes phyios nodes
+                                                                                         // hence no further filtering - only look for the one with "Physiotherapists" alias
 
-                            var address = GetUmbracoPropertyValue(member.Properties, addressAlias);
-                            var phone = GetUmbracoPropertyValue(member.Properties, phoneAlias);
-                            node.SetValue("physio_address", address);
-                            node.SetValue("physio_contact", phone);
+                        if (!string.IsNullOrWhiteSpace(containerNodeIdAndKey.Item1) && !nodeExists(containerNodeIdAndKey.Item1, member.Name)) // make sure the new member does not already exist under "Physiotherapists"
+                        {
+                            var node = _contentService.Create(member.Name, Guid.Parse(containerNodeIdAndKey.Item2), Published.Physiotherapist.ModelTypeAlias);
+                            node.SetValue(GetPhysioPropsAlias(x => x.Physio_name), member.Name);
+                            node.SetValue(GetPhysioPropsAlias(x => x.Physio_email), member.Email);
+
+                            var address = GetUmbracoPropertyValue(member.Properties, GetMemberPropsAlias(m => m.Address));
+                            var phone = GetUmbracoPropertyValue(member.Properties, GetMemberPropsAlias(m => m.Phone));
+                            node.SetValue(GetPhysioPropsAlias(x => x.Physio_address), address);
+                            node.SetValue(GetPhysioPropsAlias(x => x.Physio_contact), phone);
 
                             _contentService.SaveAndPublish(node);
-                            processedNodesIds.Add(member.Id.ToString());
 
-                            member.SetValue(memberDataFolderAlias, node.GetUdi());
+                            processedNodesIds.Add(member.Id.ToString()); // make sure this member is not create again just in case the loop has multiple 
+                                                                         // existence for the same member - Note: I found that issue in intial implementation.
+                                                                         // I left this logic as a precautionary measure.
+
+                            member.SetValue(GetMemberPropsAlias(m => m.MemberDataFolder), node.GetUdi());
                         }
                     }
                 }
@@ -79,8 +87,8 @@ namespace Acme.UI.Infrastructure.Handlers
                 return false;
             }
 
-            var address = GetUmbracoPropertyValue(member.Properties, addressAlias);
-            var phone = GetUmbracoPropertyValue(member.Properties, phoneAlias);
+            var address = GetUmbracoPropertyValue(member.Properties, GetMemberPropsAlias(m => m.Address));
+            var phone = GetUmbracoPropertyValue(member.Properties, GetMemberPropsAlias(m => m.Phone));
 
             if (string.IsNullOrWhiteSpace(address) || string.IsNullOrWhiteSpace(phone))
             {
@@ -90,12 +98,12 @@ namespace Acme.UI.Infrastructure.Handlers
             return true;
         } 
 
-        private Tuple<string, string> GetParentNodeIdAndKey()
+        private Tuple<string, string> GetPhysiotherapistsContainerIdAndKey()
         {
             if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
             {
                 var searcher = index.GetSearcher();
-                var results = searcher.CreateQuery("content").NodeTypeAlias("physiotherapists").Execute();
+                var results = searcher.CreateQuery("content").NodeTypeAlias(Published.Physiotherapists.ModelTypeAlias).Execute();
 
                 if (results.Any())
                 {
@@ -143,5 +151,16 @@ namespace Acme.UI.Infrastructure.Handlers
         {
             MemberService.Saving -= OnMemberSavingHandler; ;
         }
+
+        private string GetMemberPropsAlias<TValue>(Expression<Func<Published.Member, TValue>> selector)
+        {
+            return _member.GetAlias(Published.Member.GetModelContentType(), selector);
+        }
+
+        private string GetPhysioPropsAlias<TValue>(Expression<Func<Published.Physiotherapist, TValue>> selector)
+        {
+            return _physio.GetAlias(Published.Physiotherapist.GetModelContentType(), selector);
+        }
+
     }
 }

@@ -1,20 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using Acme.UI.Helper.Extensions;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.Linq.Expressions;
 using Umbraco.Web.Models;
+using Umbraco.Web.PublishedModels;
 
 namespace Acme.UI.Models.Authentication
 {
     public class MemberViewModel : IValidatableObject
     {
-        private const string umbracoIsApprovedPropAlias = "umbracoMemberApproved";
-        private const string addressAlias = "address";
-        private const string phoneAlias = "phone";
-
+        private Member _member;
 
         public MemberViewModel()
         {
+            _member = new Member(null);
             RegisterModel = RegisterModel.CreateModel();
+
             RegisterModel.UsernameIsEmail = false;
             RegisterModel.LoginOnSuccess = false;
         }
@@ -73,22 +75,13 @@ namespace Acme.UI.Models.Authentication
         {
             get
             {
-                var found = RegisterModel.MemberProperties.FirstOrDefault(e => e.Alias == addressAlias);
-                if (found != null)
-                {
-                    return found.Value;
-                }
-                return null; 
+                var found = RegisterModel.MemberProperties.GetValue(GetAlias(x => x.Address));
+                return found?.Value;
             }
 
             set
             {
-                var found = RegisterModel.MemberProperties.FirstOrDefault(e => e.Alias == addressAlias);
-                if (found != null)
-                {
-                    RegisterModel.MemberProperties.Remove(found);
-                }
-                RegisterModel.MemberProperties.Add(new UmbracoProperty { Alias = addressAlias, Value = value});
+                RegisterModel.MemberProperties.SetValue(GetAlias(x => x.Address), value);
             }
         }
 
@@ -96,22 +89,13 @@ namespace Acme.UI.Models.Authentication
         {
             get
             {
-                var found = RegisterModel.MemberProperties.FirstOrDefault(e => e.Alias == phoneAlias);
-                if (found != null)
-                {
-                    return found.Value;
-                }
-                return null;
+                var found = RegisterModel.MemberProperties.GetValue(GetAlias(x => x.Phone));
+                return found?.Value;
             }
 
             set
             {
-                var found = RegisterModel.MemberProperties.FirstOrDefault(e => e.Alias == phoneAlias);
-                if (found != null)
-                {
-                    RegisterModel.MemberProperties.Remove(found);
-                }
-                RegisterModel.MemberProperties.Add(new UmbracoProperty { Alias = phoneAlias, Value = value });
+                RegisterModel.MemberProperties.SetValue(GetAlias(x => x.Phone), value);
             }
         }
 
@@ -119,22 +103,13 @@ namespace Acme.UI.Models.Authentication
         {
             get
             {
-                var found = RegisterModel.MemberProperties.FirstOrDefault(e => e.Alias == umbracoIsApprovedPropAlias);
-                if (found != null)
-                {
-                    return found.Value != "0";
-                }
-                return true; // it is true in all other cases while registering the user
+                var found = RegisterModel.MemberProperties.GetValue(GetAlias(x => x.UmbracoMemberApproved));
+                return found != null ? found.Value != "0" : true;
             }
 
             set
             {
-                var found = RegisterModel.MemberProperties.FirstOrDefault(e => e.Alias == umbracoIsApprovedPropAlias);
-                if (found != null)
-                {
-                    RegisterModel.MemberProperties.Remove(found);
-                }
-                RegisterModel.MemberProperties.Add(new UmbracoProperty { Alias = umbracoIsApprovedPropAlias, Value = (value ? "1" : "0") });
+                RegisterModel.MemberProperties.SetValue(GetAlias(x => x.UmbracoMemberApproved), (value ? "1" : "0"));
             }
         }
 
@@ -157,45 +132,48 @@ namespace Acme.UI.Models.Authentication
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (string.IsNullOrWhiteSpace(DisplayName))
-            {
-                yield return new ValidationResult(DisplayNameTitle + " is mandatory");
-            }
+            List<ValidationResult> result = new List<ValidationResult>();
 
-            if (string.IsNullOrWhiteSpace(UserName))
-            {
-                yield return new ValidationResult(UserNameTitle + " is mandatory");
-            }
-
-            if (string.IsNullOrWhiteSpace(Email))
-            {
-                yield return new ValidationResult(EmailTitle + " is mandatory");
-            }
-
-            if (string.IsNullOrWhiteSpace(Address))
-            {
-                yield return new ValidationResult(AddressTitle + " is mandatory");
-            }
-
-            if (string.IsNullOrWhiteSpace(Phone))
-            {
-                yield return new ValidationResult(PhoneTitle + " is mandatory");
-            }
-
-            if (string.IsNullOrWhiteSpace(Password))
-            {
-                yield return new ValidationResult(PasswordTitle + " is mandatory");
-            }
-
-            if (string.IsNullOrWhiteSpace(ConfirmPassword))
-            {
-                yield return new ValidationResult(ConfirmPasswordTitle + " is mandatory");
-            }
+            result.AddRange(ValidateMandatoryFields());
 
             if (string.Compare(Password, ConfirmPassword) != 0)
             {
-                yield return new ValidationResult(PasswordTitle + " and "+ ConfirmPasswordTitle + " do not match.");
+                result.Add(new ValidationResult(PasswordTitle + " and " + ConfirmPasswordTitle + " do not match."));
             }
+
+            return result;
+        }
+
+        private IEnumerable<ValidationResult> ValidateMandatoryFields()
+        {
+            List<ValidationResult> result = new List<ValidationResult>();
+            foreach (var field in new Tuple<string, string>[] { new Tuple<string, string>(DisplayNameTitle, DisplayName),
+                                                                new Tuple<string, string>(UserNameTitle, UserName),
+                                                                new Tuple<string, string>(EmailTitle, Email),
+                                                                new Tuple<string, string>(AddressTitle, Address),
+                                                                new Tuple<string, string>(PhoneTitle, Phone),
+                                                                new Tuple<string, string>(PasswordTitle, Password),
+                                                                new Tuple<string, string>(ConfirmPasswordTitle, ConfirmPassword),})
+            {
+                result.AddIfNotNull(CheckProperty(field.Item1, field.Item2));
+            }
+
+            return result;
+        }
+
+        private ValidationResult CheckProperty(string propertyTitle, string propertyValue)
+        {
+            if (propertyValue.IsNullOrWhiteSpaceExt())
+            { 
+                return new ValidationResult($"{propertyTitle} is mandatory");
+            }
+
+            return null;
+        }
+
+        private string GetAlias<TValue>(Expression<Func<Member, TValue>> selector)
+        {
+            return _member.GetAlias(Member.GetModelContentType(), selector);
         }
     }
 }

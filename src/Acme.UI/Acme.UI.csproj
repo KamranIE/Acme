@@ -93,6 +93,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Examine.dll</HintPath>
     </Reference>
+    <Reference Include="Umbraco.ModelsBuilder, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.ModelsBuilder.dll</HintPath>
+    </Reference>
     <Reference Include="Umbraco.Web">
       <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Web.dll</HintPath>
     </Reference>
@@ -116,7 +120,9 @@
     <Compile Include="Controllers\Authentication\MemberController.cs" />
     <Compile Include="Controllers\Business\AthletesController.cs" />
     <Compile Include="Helper\Extensions\CollectionExtension.cs" />
+    <Compile Include="Helper\Extensions\PublishedContentModelExtension.cs" />
     <Compile Include="Helper\Extensions\StringExtension.cs" />
+    <Compile Include="Helper\Extensions\UmbracoPropertyExtension.cs" />
     <Compile Include="Infrastructure\Handlers\MemberSaveHandler.cs" />
     <Compile Include="Infrastructure\Handlers\PublishHandler.cs" />
     <Compile Include="Infrastructure\Routing\AcmeRouter.cs" />
