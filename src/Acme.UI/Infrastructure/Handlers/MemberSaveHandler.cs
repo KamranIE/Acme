@@ -16,14 +16,6 @@ using Umbraco.Web;
 
 namespace Acme.UI.Infrastructure.Handlers
 {
-    public class MemberSaveHandlerComposer : IUserComposer
-    {
-        public void Compose(Composition composition)
-        {
-            composition.Components().Append<MemberSaveHandler>();
-        }
-    }
-
     public class MemberSaveHandler : IComponent
     {
         private Published.Member _member;

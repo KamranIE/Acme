@@ -6,16 +6,21 @@ using System.Linq;
 using Umbraco.Web.PublishedModels;
 using Umbraco.Web.Models;
 using Umbraco.Core.Services;
+using Acme.UI.Helper.Services;
 
 namespace Acme.UI.Controllers.Authentication
 {
     public class MemberController : SurfaceController
     {
         private IMemberService _memberService;
+        private IAcmeService<string, string> _serviceTest;
+        private CustomService2 _serviceTest2;
 
-        public MemberController(IMemberService service)
+        public MemberController(IMemberService service, IAcmeService<string, string> serviceTest, CustomService2 serviceTest2)
         {
             _memberService = service;
+            _serviceTest = serviceTest;
+            _serviceTest2 = serviceTest2;
         }
 
         public ActionResult RenderLogin(string returnUrl)
