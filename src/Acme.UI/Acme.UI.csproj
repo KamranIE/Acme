@@ -123,9 +123,11 @@
     <Compile Include="Helper\Extensions\PublishedContentModelExtension.cs" />
     <Compile Include="Helper\Extensions\StringExtension.cs" />
     <Compile Include="Helper\Extensions\UmbracoPropertyExtension.cs" />
+    <Compile Include="Helper\Services\CustomService2.cs" />
+    <Compile Include="Helper\Services\CustomService.cs" />
+    <Compile Include="Infrastructure\DI\AcmeComposer.cs" />
+    <Compile Include="Helper\Services\IAcmeService.cs" />
     <Compile Include="Infrastructure\Handlers\MemberSaveHandler.cs" />
-    <Compile Include="Infrastructure\Handlers\PublishHandler.cs" />
-    <Compile Include="Infrastructure\Routing\AcmeRouter.cs" />
     <Compile Include="Models\Athletes\AthleteViewModel.cs" />
     <Compile Include="Models\Athletes\PhysioAthletesViewModel.cs" />
     <Compile Include="Models\Authentication\LoginModel.cs" />
