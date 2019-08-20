@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using Acme.UI.Helper.Extensions;
 using Published = Umbraco.Web.PublishedModels;
 using System.Linq.Expressions;
+using Umbraco.Web;
 
 namespace Acme.UI.Infrastructure.Handlers
 {
@@ -27,21 +28,27 @@ namespace Acme.UI.Infrastructure.Handlers
     {
         private Published.Member _member;
         private Published.Physiotherapist _physio;
-
+        private IUmbracoContextFactory _contextFactory;
         private IContentService _contentService;
         
-        public MemberSaveHandler(IContentService contentService)
+        public MemberSaveHandler(IContentService contentService, IUmbracoContextFactory contextFactory)
         {
             _member = new Published.Member(null);
             _physio = new Published.Physiotherapist(null);
             _contentService = contentService;
+            _contextFactory = contextFactory;
         }
 
         public void Initialize()
         {
             MemberService.Saving += OnMemberSavingHandler;
         }
-        
+
+        /// <summary>
+        /// It is responsible to create newly activated physio's data folder and link it to his/her membership record
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void OnMemberSavingHandler(IMemberService sender, SaveEventArgs<IMember> args)
         {
             List<string> processedNodesIds = new List<string>();
@@ -56,24 +63,44 @@ namespace Acme.UI.Infrastructure.Handlers
                         var containerNodeIdAndKey = GetPhysiotherapistsContainerIdAndKey(); // we will (and should) have only one "Physiotherapists" content node to contain all the nodes phyios nodes
                                                                                          // hence no further filtering - only look for the one with "Physiotherapists" alias
 
-                        if (!string.IsNullOrWhiteSpace(containerNodeIdAndKey.Item1) && !nodeExists(containerNodeIdAndKey.Item1, member.Name)) // make sure the new member does not already exist under "Physiotherapists"
-                        {
-                            var node = _contentService.Create(member.Name, Guid.Parse(containerNodeIdAndKey.Item2), Published.Physiotherapist.ModelTypeAlias);
-                            node.SetValue(GetPhysioPropsAlias(x => x.Physio_name), member.Name);
-                            node.SetValue(GetPhysioPropsAlias(x => x.Physio_email), member.Email);
+                        if (!string.IsNullOrWhiteSpace(containerNodeIdAndKey.Item1))  // Physiotherapists node must exists in Data content. It is the parent of all physios
+                        {                                                             // Don't do following if it doesn't
+                            
+                            var foundNode = findNode(containerNodeIdAndKey.Item1, member.Name);
+                            GuidUdi memberDataFolderValue;
 
-                            var address = GetUmbracoPropertyValue(member.Properties, GetMemberPropsAlias(m => m.Address));
-                            var phone = GetUmbracoPropertyValue(member.Properties, GetMemberPropsAlias(m => m.Phone));
-                            node.SetValue(GetPhysioPropsAlias(x => x.Physio_address), address);
-                            node.SetValue(GetPhysioPropsAlias(x => x.Physio_contact), phone);
+                            if (foundNode == null) // if node for new physiotherapist is not already created, then create it and grab its uid
+                            {
+                                var node = _contentService.Create(member.Name, Guid.Parse(containerNodeIdAndKey.Item2), Published.Physiotherapist.ModelTypeAlias);
+                                node.SetValue(GetPhysioPropsAlias(x => x.Physio_name), member.Name);
+                                node.SetValue(GetPhysioPropsAlias(x => x.Physio_email), member.Email);
 
-                            _contentService.SaveAndPublish(node);
+                                var address = GetUmbracoPropertyValue(member.Properties, GetMemberPropsAlias(m => m.Address));
+                                var phone = GetUmbracoPropertyValue(member.Properties, GetMemberPropsAlias(m => m.Phone));
+                                node.SetValue(GetPhysioPropsAlias(x => x.Physio_address), address);
+                                node.SetValue(GetPhysioPropsAlias(x => x.Physio_contact), phone);
 
-                            processedNodesIds.Add(member.Id.ToString()); // make sure this member is not create again just in case the loop has multiple 
-                                                                         // existence for the same member - Note: I found that issue in intial implementation.
-                                                                         // I left this logic as a precautionary measure.
+                                _contentService.SaveAndPublish(node);
 
-                            member.SetValue(GetMemberPropsAlias(m => m.MemberDataFolder), node.GetUdi());
+                                processedNodesIds.Add(member.Id.ToString()); // make sure this member is not create again just in case the loop has multiple 
+                                                                             // existence for the same member - Note: I found that issue in intial implementation.
+                                                                             // I left this logic as a precautionary measure.
+                                memberDataFolderValue = node.GetUdi();
+                                
+                            }
+                            else // if node for new physiotherapist is already there, then create it and grab its uid anyways
+                            {
+                                // using contextFactory is the recommended way of getting conten with V8 
+                                // <see href="https://our.umbraco.com/forum/umbraco-8/96270-using-umbracohelper-in-a-custom-class-in-v8"></see>
+                                using (var cref = _contextFactory.EnsureUmbracoContext())
+                                {
+                                    var node = cref.UmbracoContext.Content.GetById(int.Parse(foundNode.Id));
+                                    memberDataFolderValue = new GuidUdi("document", node.Key);
+                                }
+                            }
+
+                            // now set the uid to member's MemberDataFolder property
+                            member.SetValue(GetMemberPropsAlias(m => m.MemberDataFolder), memberDataFolderValue);
                         }
                     }
                 }
@@ -117,7 +144,7 @@ namespace Acme.UI.Infrastructure.Handlers
             return new Tuple<string, string>(null, null);
         }
 
-        private bool nodeExists(string parentNodeId, string nodeName)
+        private ISearchResult findNode(string parentNodeId, string nodeName)
         {
             if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
             {
@@ -126,11 +153,11 @@ namespace Acme.UI.Infrastructure.Handlers
 
                 if (results.Any())
                 {
-                    return true;
+                    return results.First();
                 }
             }
 
-            return false;
+            return null;
         }
 
         private string GetUmbracoPropertyValue(PropertyCollection properties, string propertyAlias)
