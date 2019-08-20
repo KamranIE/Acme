@@ -97,8 +97,6 @@ Along with Acme solution and projects the \UmbracoCms.8.1.1\App_Data\Models fold
 
 
 ## TODO Tasks
-1. Physiotherapist Registration Page
-1. Dependency Injection
 1. Investigate custom urls without content that backs it, This will look into pipelines
 1. Capture form (Assessment Form)
 1. Define a custgom index and/or custom index field.
