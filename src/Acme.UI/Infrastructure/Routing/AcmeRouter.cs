@@ -1,9 +1,4 @@
 ﻿using Acme.UI.Infrastructure.Routing.VirtualRouteHandlers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using System.Web.Routing;
 using Umbraco.Core.Composing;
 using Umbraco.Web;

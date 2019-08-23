@@ -14,7 +14,7 @@ namespace Acme.UI.Infrastructure.Routing
     {
         private readonly Dictionary<string, RouteParameters> _pathToContentType = new Dictionary<string, RouteParameters>
         {
-            { "(?<home>dashboard)/(?<section>athlete)/(?<athleteName>[a-zA-Z0-9-]+)", new RouteParameters(typeof(Umbraco.Web.PublishedModels.Athlete), "athleteName", "//data/physiotherapists/physiotherapist")}
+            { "(?<home>dashboard)/(?<section>athlete)/(?<athleteName>[a-zA-Z0-9-]+)", new RouteParameters(typeof(Umbraco.Web.PublishedModels.Athlete), "Athlete", "//home/contentPage/contentPage")}
         };
 
         public bool TryFindContent(PublishedRequest request)
@@ -38,16 +38,11 @@ namespace Acme.UI.Infrastructure.Routing
                     var groups = (matches[0] as System.Text.RegularExpressions.Match)?.Groups;
                     if (groups != null)
                     {
-                        var parameterValue = groups[route.Value.SearchNodeByName];
-                        var searchValue = parameterValue?.Value ?? route.Value.SearchNodeByName;
+                        var publishedContents = umbracoContext.Content.GetByXPath(route.Value.RootNodeName);
 
-                        var home = umbracoContext.Content.GetByXPath(route.Value.RootNodeName);
-
-                        if (home.HasValues())
+                        if (publishedContents.HasValues())
                         {
-                            var parent = home.FirstOrDefault(x => string.Compare(x.Name, HttpContext.Current.User.Identity.Name, true) == 0);
-
-                            return parent?.Children?.FirstOrDefault(child => child.GetType() == route.Value.DataSourceType && string.Compare(child.Name, searchValue, true) == 0);
+                            return publishedContents.FirstOrDefault(x => string.Compare(x.Name, route.Value.SearchNodeByName, true) == 0);
                         }
                     }
                 }

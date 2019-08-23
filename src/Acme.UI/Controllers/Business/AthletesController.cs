@@ -5,56 +5,99 @@ using Examine;
 using Umbraco.Examine;
 using Acme.UI.Models.Athletes;
 using Umbraco.Web.PublishedModels;
-using Umbraco.Core.Models.PublishedContent;
+using System.Text.RegularExpressions;
+using Acme.UI.Helper.Extensions;
 
 namespace Acme.UI.Controllers.Business
 {
     public class AthletesController : SurfaceController
     {
-        public ActionResult AthleteDetails(int athleteId)
+        public ActionResult AthleteDetails(int? athleteId)
         {
-            return GetAtheleteById(athleteId);
+            if (athleteId.HasValue)
+            {
+                return GetAtheleteById(athleteId.Value);
+            }
+
+            var athleteName = GetAthleteNameFromUrl(this.Request.Url.OriginalString);
+
+            if (!athleteName.IsNullOrWhiteSpaceExt())
+            {
+                var logginPhysioNodeId = GetLoggedInPhysioNodeId();
+                var athletesForLoggedInUser = GetAthletesForLoggedInUser(logginPhysioNodeId);
+
+                if (athletesForLoggedInUser.HasValues())
+                {
+                    var matchedAthlete = athletesForLoggedInUser.FirstOrDefault(athlete => athleteName.Equals(Umbraco.Content(athlete.Id).Name, System.StringComparison.InvariantCultureIgnoreCase));
+
+                    return matchedAthlete != null ? GetAtheleteById(int.Parse(matchedAthlete.Id)) : GetAtheleteById(null);
+                }
+            }
+
+            return GetAtheleteById(null);
         }
 
-        public ActionResult AthleteDetails()
+        public ActionResult GetAtheleteById(int? athleteId)
         {
-            //Write code here to look at 
-            //Request.Url, parse it, get the athelete name, lookup id call this thing
-            return GetAtheleteById(1);
-        }
-
-        public ActionResult GetAtheleteById(int atheleteId) {
-            var athlete = new AthleteViewModel(Umbraco.Content(athleteId));
+            var content = athleteId.HasValue ? Umbraco.Content(athleteId) : null;
+            var athlete = content != null ? new AthleteViewModel(content) : null;
             return View("~/Views/BusinessPages/Athletes/Athlete.cshtml", athlete);
         }
 
         public ActionResult List(int? maxAthletesToDisplay)
         {
             var logginPhysioNodeId = GetLoggedInPhysioNodeId();
-            
+            var athletesForLoggedInUser = GetAthletesForLoggedInUser(logginPhysioNodeId);
             var physioAthletesViewModel = PhysioAthletesViewModel.Create(Umbraco, logginPhysioNodeId ?? 0, maxAthletesToDisplay);
             
-            if (logginPhysioNodeId != null)
+            if (athletesForLoggedInUser != null)
             {
-                if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
+                if (athletesForLoggedInUser.Any())
                 {
-                    var searcher = index.GetSearcher();
-                    var results = searcher.CreateQuery("content").ParentId(logginPhysioNodeId.Value).Execute();
-
-                    if (results.Any())
+                    foreach (var item in athletesForLoggedInUser)
                     {
-                        foreach (var item in results)
+                        if (item.Id != null)
                         {
-                            if (item.Id != null)
-                            {
-                                physioAthletesViewModel.AddAthlete(new AthleteViewModel(Umbraco.Content(item.Id)));
-                            }
+                            physioAthletesViewModel.AddAthlete(new AthleteViewModel(Umbraco.Content(item.Id)));
                         }
                     }
                 }
             }
 
             return View("~/Views/BusinessPages/Athletes/List.cshtml", physioAthletesViewModel);
+        }
+
+        private string GetAthleteNameFromUrl(string url)
+        {
+            Regex regex = new Regex("(?<home>dashboard)/(?<section>athlete)/(?<athleteName>[a-zA-Z0-9-]+)");
+            var matches = regex.Matches(url);
+
+            if (matches != null && matches.Count > 0)
+            {
+                var groups = (matches[0] as System.Text.RegularExpressions.Match)?.Groups;
+
+                if (groups != null)
+                {
+                    return groups["athleteName"]?.Value;
+                }
+            }
+
+            return null;
+        }
+
+        private ISearchResults GetAthletesForLoggedInUser(int? logginPhysioNodeId)
+        {
+
+            if (logginPhysioNodeId != null)
+            {
+                if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
+                {
+                    var searcher = index.GetSearcher();
+                    return searcher.CreateQuery("content").ParentId(logginPhysioNodeId.Value).Execute();
+                }
+            }
+
+            return null;
         }
 
         private int? GetLoggedInPhysioNodeId()
