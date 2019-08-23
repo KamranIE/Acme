@@ -1,4 +1,6 @@
-﻿namespace Acme.UI.Helper.Extensions
+﻿using System.Text.RegularExpressions;
+
+namespace Acme.UI.Helper.Extensions
 {
     public static class StringExtension
     {
@@ -23,6 +25,31 @@
 
             return true;
         }
+
+        public static bool ContainsUrl(this string str, string path)
+        {
+            if (str == null || path == null)
+            {
+                return false;
+            }
+
+            var formatedPath = ReplacePathSheshesWithTilda(path).ToLower();
+            var formatedStr = ReplacePathSheshesWithTilda(str).ToLower();
+
+            return formatedStr.Contains(formatedPath);
+        }
+
+
+        private static string ReplacePathSheshesWithTilda(string path)
+        {
+            string replacement = "τ"; // a char difficult  τ = 999
+            Regex regEx = new Regex("[\\/]");
+            var pathWithTilda = regEx.Replace(path, replacement);
+
+            // also remove starting and ending "slash" (already replaced with special char) presenence for better compare
+            return pathWithTilda.TrimStart(replacement[0]).TrimEnd(replacement[0]);
+        }
+
     }
 
 

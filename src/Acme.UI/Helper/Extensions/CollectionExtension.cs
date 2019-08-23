@@ -20,5 +20,21 @@ namespace Acme.UI.Helper.Extensions
                 obj.Add(item);
             }
         }
+
+
+        public static bool NotNullAndContainsKey<TKey, TValue>(this IDictionary<TKey, TValue> obj, TKey key)
+        {
+            return obj != null && obj.Keys != null && obj.Keys.Contains(key);
+        }
+
+        public static TValue GetValue<TKey, TValue>(this IDictionary<TKey, TValue> obj, TKey key) 
+        {
+            if (obj.NotNullAndContainsKey(key))
+            {
+                return obj[key];
+            }
+
+            return default(TValue);
+        }
     }
 }

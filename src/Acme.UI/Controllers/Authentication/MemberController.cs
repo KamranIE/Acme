@@ -25,12 +25,12 @@ namespace Acme.UI.Controllers.Authentication
 
         public ActionResult RenderLogin(string returnUrl)
         {
-            var model = new Models.Authentication.LoginModel
+            var loginModel = new Models.Authentication.LoginModel
             {
                 ReturnUrl = returnUrl
             };
 
-            return PartialView("~/Views/BusinessPages/Authentication/_Login.cshtml", model);
+            return PartialView("~/Views/BusinessPages/Authentication/_Login.cshtml", loginModel);
         }
 
         [HttpPost]

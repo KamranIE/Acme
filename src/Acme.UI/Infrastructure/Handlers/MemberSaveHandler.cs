@@ -180,6 +180,5 @@ namespace Acme.UI.Infrastructure.Handlers
         {
             return _physio.GetAlias(Published.Physiotherapist.GetModelContentType(), selector);
         }
-
     }
 }

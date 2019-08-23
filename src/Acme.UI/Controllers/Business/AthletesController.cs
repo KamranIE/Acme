@@ -5,6 +5,7 @@ using Examine;
 using Umbraco.Examine;
 using Acme.UI.Models.Athletes;
 using Umbraco.Web.PublishedModels;
+using Umbraco.Core.Models.PublishedContent;
 
 namespace Acme.UI.Controllers.Business
 {
@@ -12,6 +13,17 @@ namespace Acme.UI.Controllers.Business
     {
         public ActionResult AthleteDetails(int athleteId)
         {
+            return GetAtheleteById(athleteId);
+        }
+
+        public ActionResult AthleteDetails()
+        {
+            //Write code here to look at 
+            //Request.Url, parse it, get the athelete name, lookup id call this thing
+            return GetAtheleteById(1);
+        }
+
+        public ActionResult GetAtheleteById(int atheleteId) {
             var athlete = new AthleteViewModel(Umbraco.Content(athleteId));
             return View("~/Views/BusinessPages/Athletes/Athlete.cshtml", athlete);
         }
