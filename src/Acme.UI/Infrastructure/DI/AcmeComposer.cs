@@ -21,7 +21,7 @@ namespace Acme.UI.Infrastructure.DI
         private void RegisterServices(Composition composition)
         {
             composition.Register<IAcmeService<string, string>, CustomService>(Lifetime.Request);
-            composition.Register<CustomService2>(Lifetime.Transient);
+            composition.Register<ExamineService>(Lifetime.Request);
         }
 
     }

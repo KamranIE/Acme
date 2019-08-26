@@ -29,5 +29,10 @@ namespace Acme.UI.Helper.Extensions
                 obj.Add(new UmbracoProperty { Alias = alias, Value = value });
             }
         }
+
+        public static bool HasValues(this Umbraco.Core.Models.Property property)
+        {
+            return property != null && property.Values.HasValues();
+        }
     }
 }

@@ -14,13 +14,12 @@ namespace Acme.UI.Controllers.Authentication
     {
         private IMemberService _memberService;
         private IAcmeService<string, string> _serviceTest;
-        private CustomService2 _serviceTest2;
 
-        public MemberController(IMemberService service, IAcmeService<string, string> serviceTest, CustomService2 serviceTest2)
+        public MemberController(IMemberService service, IAcmeService<string, string> serviceTest, ExamineService examineService)
         {
             _memberService = service;
             _serviceTest = serviceTest;
-            _serviceTest2 = serviceTest2;
+            
         }
 
         public ActionResult RenderLogin(string returnUrl)

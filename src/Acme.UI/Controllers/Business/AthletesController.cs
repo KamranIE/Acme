@@ -1,15 +1,22 @@
-﻿using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Umbraco.Web.Mvc;
-using Examine;
 using Umbraco.Examine;
 using Acme.UI.Models.Athletes;
 using Umbraco.Web.PublishedModels;
+using Acme.UI.Helper.Services;
+using Acme.UI.Helper.Extensions;
 
 namespace Acme.UI.Controllers.Business
 {
     public class AthletesController : SurfaceController
     {
+        private ExamineService _examineService;
+        
+        public AthletesController(ExamineService examineService)
+        {
+            _examineService = examineService;
+        }
+
         public ActionResult AthleteDetails(int athleteId)
         {
             var athlete = new AthleteViewModel(Umbraco.Content(athleteId));
@@ -19,25 +26,23 @@ namespace Acme.UI.Controllers.Business
         public ActionResult List(int? maxAthletesToDisplay)
         {
             var logginPhysioNodeId = GetLoggedInPhysioNodeId();
-            
-            var physioAthletesViewModel = PhysioAthletesViewModel.Create(Umbraco, logginPhysioNodeId ?? 0, maxAthletesToDisplay);
-            
-            if (logginPhysioNodeId != null)
-            {
-                if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
-                {
-                    var searcher = index.GetSearcher();
-                    var results = searcher.CreateQuery("content").ParentId(logginPhysioNodeId.Value).Execute();
 
-                    if (results.Any())
+            var physioAthletesViewModel = PhysioAthletesViewModel.Create(Umbraco, logginPhysioNodeId ?? 0, maxAthletesToDisplay);
+
+            if (logginPhysioNodeId == null)
+            {
+                return View("~/Views/BusinessPages/Athletes/List.cshtml", physioAthletesViewModel);
+            }
+
+            var results = _examineService.Query?.ParentId(logginPhysioNodeId.Value).Execute();
+
+            if (results.HasValues())
+            {
+                foreach (var item in results)
+                {
+                    if (!item.Id.IsNull())
                     {
-                        foreach (var item in results)
-                        {
-                            if (item.Id != null)
-                            {
-                                physioAthletesViewModel.AddAthlete(new AthleteViewModel(Umbraco.Content(item.Id)));
-                            }
-                        }
+                        physioAthletesViewModel.AddAthlete(new AthleteViewModel(Umbraco.Content(item.Id)));
                     }
                 }
             }

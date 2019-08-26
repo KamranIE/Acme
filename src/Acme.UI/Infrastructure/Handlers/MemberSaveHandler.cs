@@ -13,6 +13,7 @@ using Acme.UI.Helper.Extensions;
 using Published = Umbraco.Web.PublishedModels;
 using System.Linq.Expressions;
 using Umbraco.Web;
+using Acme.UI.Helper.Services;
 
 namespace Acme.UI.Infrastructure.Handlers
 {
@@ -22,13 +23,15 @@ namespace Acme.UI.Infrastructure.Handlers
         private Published.Physiotherapist _physio;
         private IUmbracoContextFactory _contextFactory;
         private IContentService _contentService;
-        
-        public MemberSaveHandler(IContentService contentService, IUmbracoContextFactory contextFactory)
+        private ExamineService _examineService;
+
+        public MemberSaveHandler(IContentService contentService, IUmbracoContextFactory contextFactory, ExamineService examineService)
         {
             _member = new Published.Member(null);
             _physio = new Published.Physiotherapist(null);
             _contentService = contentService;
             _contextFactory = contextFactory;
+            _examineService = examineService;
         }
 
         public void Initialize()
@@ -47,18 +50,20 @@ namespace Acme.UI.Infrastructure.Handlers
 
             foreach (IMember member in args.SavedEntities)
             {
-                if (!processedNodesIds.ContainsExt(member.Id.ToString())) // if not processed already, only then process it
+                if (processedNodesIds.ContainsExt(member.Id.ToString())) // if not processed already, only then process it
                 {
-                    if (member.IsApproved && MandatoryFieldsArePopulated(member))
-                    {
-                        // create tree structure
-                        NodeIdAndKey<string, string> containerNodeIdAndKey = GetPhysiotherapistsContainerIdAndKey(); // we will (and should) have only one "Physiotherapists" content node to contain all the nodes phyios nodes
-                                                                                                                     // hence no further filtering - only look for the one with "Physiotherapists" alias
-                        ProcessMember(containerNodeIdAndKey, member);
-                    }
-                    processedNodesIds.Add(member.Id.ToString()); // Mark the member as processed - Note: I found that issue in intial implementation.
-                                                                 // I left this logic as a precautionary measure.
+                    continue;
                 }
+
+                if (member.IsApproved && MandatoryFieldsArePopulated(member))
+                {
+                    // create tree structure
+                    NodeIdAndKey<string, string> containerNodeIdAndKey = GetPhysiotherapistsContainerIdAndKey(); // we will (and should) have only one "Physiotherapists" content node to contain all the nodes phyios nodes
+                                                                                                                    // hence no further filtering - only look for the one with "Physiotherapists" alias
+                    ProcessMember(containerNodeIdAndKey, member);
+                }
+                processedNodesIds.Add(member.Id.ToString()); // Mark the member as processed - Note: I found that issue in intial implementation.
+                                                                 // I left this logic as a precautionary measure.
             }
         }
 
@@ -72,7 +77,6 @@ namespace Acme.UI.Infrastructure.Handlers
         {
             if (parentNodeIdAndKey != null)  // Physiotherapists node must exists in Data content. It is the parent of all physios
             {                                                             // Don't do following if it doesn't
-
                 var foundNode = FindNode(parentNodeIdAndKey.NodeId, memberToProcess.Username);
                 GuidUdi memberDataFolderValue;
 
@@ -153,21 +157,24 @@ namespace Acme.UI.Infrastructure.Handlers
         /// <returns></returns>
         private NodeIdAndKey<string, string> GetPhysiotherapistsContainerIdAndKey()
         {
-            if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
-            {
-                var searcher = index.GetSearcher();
-                var results = searcher.CreateQuery("content").NodeTypeAlias(Published.Physiotherapists.ModelTypeAlias).Execute();
+            var qry = _examineService.Query;
 
-                if (results.Any())
-                {
-                    var node = results.First();
-                    var keyValue = node.Values.FirstOrDefault(x => "__Key".Equals(x.Key));
-                    var key = keyValue.Value;
-                    return new NodeIdAndKey<string, string>(node.Id, key);
-                }
+            if (qry == null)
+            {
+                return null;
             }
 
-            return null;
+            var results = qry.NodeTypeAlias(Published.Physiotherapists.ModelTypeAlias).Execute();
+
+            if (!results.HasValues())
+            {
+                return null;
+            }
+
+            var node = results.First();
+            var keyValue = node.Values.FirstOrDefault(x => "__Key".Equals(x.Key));
+            var key = keyValue.Value;
+            return new NodeIdAndKey<string, string>(node.Id, key);
         }
 
         /// <summary>
@@ -178,15 +185,11 @@ namespace Acme.UI.Infrastructure.Handlers
         /// <returns></returns>
         private ISearchResult FindNode(string parentNodeId, string nodeName)
         {
-            if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
-            {
-                var searcher = index.GetSearcher();
-                var results = searcher.CreateQuery("content").ParentId(int.Parse(parentNodeId)).And().NodeName(nodeName).Execute();
+            var results = _examineService.Query?.ParentId(int.Parse(parentNodeId)).And().NodeName(nodeName).Execute();
 
-                if (results.Any())
-                {
-                    return results.First();
-                }
+            if (results.HasValues())
+            {
+                return results.First();
             }
 
             return null;
@@ -194,16 +197,18 @@ namespace Acme.UI.Infrastructure.Handlers
 
         private string GetUmbracoPropertyValue(PropertyCollection properties, string propertyAlias)
         {
-            if (properties.HasValues())
+            if (!properties.HasValues())
             {
-                var property = properties.FirstOrDefault(prop => prop.Alias == propertyAlias);
-                if (property != null && property.Values.HasValues())
-                {
-                    return string.Join(string.Empty, property.Values.Select(value => value.EditedValue != null ? value.EditedValue.ToString() : string.Empty).ToList());
-                }
+                return null;
             }
 
-            return null;
+            var property = properties.FirstOrDefault(prop => prop.Alias == propertyAlias);
+            if (!property.HasValues())
+            {
+                return null;
+            }
+
+            return string.Join(string.Empty, property.Values.Select(value => value.EditedValue?.ToString() ?? string.Empty).ToList());
         }
  
         public void Terminate()
