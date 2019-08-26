@@ -43,62 +43,90 @@ namespace Acme.UI.Infrastructure.Handlers
         /// <param name="args"></param>
         private void OnMemberSavingHandler(IMemberService sender, SaveEventArgs<IMember> args)
         {
-            List<string> processedNodesIds = new List<string>();
+            List<string> processedNodesIds = new List<string>(); // To avoid chances to process same node multiple times - noticed it sometimes and could be a possible behaviour of umbraco
 
             foreach (IMember member in args.SavedEntities)
             {
-                if (processedNodesIds.FirstOrDefault(id => id == member.Id.ToString()) == null)
+                if (!processedNodesIds.ContainsExt(member.Id.ToString())) // if not processed already, only then process it
                 {
                     if (member.IsApproved && MandatoryFieldsArePopulated(member))
                     {
                         // create tree structure
-                        var containerNodeIdAndKey = GetPhysiotherapistsContainerIdAndKey(); // we will (and should) have only one "Physiotherapists" content node to contain all the nodes phyios nodes
-                                                                                         // hence no further filtering - only look for the one with "Physiotherapists" alias
-
-                        if (!string.IsNullOrWhiteSpace(containerNodeIdAndKey.Item1))  // Physiotherapists node must exists in Data content. It is the parent of all physios
-                        {                                                             // Don't do following if it doesn't
-                            
-                            var foundNode = findNode(containerNodeIdAndKey.Item1, member.Name);
-                            GuidUdi memberDataFolderValue;
-
-                            if (foundNode == null) // if node for new physiotherapist is not already created, then create it and grab its uid
-                            {
-                                var node = _contentService.Create(member.Name, Guid.Parse(containerNodeIdAndKey.Item2), Published.Physiotherapist.ModelTypeAlias);
-                                node.SetValue(GetPhysioPropsAlias(x => x.Physio_name), member.Name);
-                                node.SetValue(GetPhysioPropsAlias(x => x.Physio_email), member.Email);
-
-                                var address = GetUmbracoPropertyValue(member.Properties, GetMemberPropsAlias(m => m.Address));
-                                var phone = GetUmbracoPropertyValue(member.Properties, GetMemberPropsAlias(m => m.Phone));
-                                node.SetValue(GetPhysioPropsAlias(x => x.Physio_address), address);
-                                node.SetValue(GetPhysioPropsAlias(x => x.Physio_contact), phone);
-
-                                _contentService.SaveAndPublish(node);
-
-                                processedNodesIds.Add(member.Id.ToString()); // make sure this member is not create again just in case the loop has multiple 
-                                                                             // existence for the same member - Note: I found that issue in intial implementation.
-                                                                             // I left this logic as a precautionary measure.
-                                memberDataFolderValue = node.GetUdi();
-                                
-                            }
-                            else // if node for new physiotherapist is already there, then create it and grab its uid anyways
-                            {
-                                // using contextFactory is the recommended way of getting conten with V8 
-                                // <see href="https://our.umbraco.com/forum/umbraco-8/96270-using-umbracohelper-in-a-custom-class-in-v8"></see>
-                                using (var cref = _contextFactory.EnsureUmbracoContext())
-                                {
-                                    var node = cref.UmbracoContext.Content.GetById(int.Parse(foundNode.Id));
-                                    memberDataFolderValue = new GuidUdi("document", node.Key);
-                                }
-                            }
-
-                            // now set the uid to member's MemberDataFolder property
-                            member.SetValue(GetMemberPropsAlias(m => m.MemberDataFolder), memberDataFolderValue);
-                        }
+                        NodeIdAndKey<string, string> containerNodeIdAndKey = GetPhysiotherapistsContainerIdAndKey(); // we will (and should) have only one "Physiotherapists" content node to contain all the nodes phyios nodes
+                                                                                                                     // hence no further filtering - only look for the one with "Physiotherapists" alias
+                        ProcessMember(containerNodeIdAndKey, member);
                     }
+                    processedNodesIds.Add(member.Id.ToString()); // Mark the member as processed - Note: I found that issue in intial implementation.
+                                                                 // I left this logic as a precautionary measure.
                 }
             }
         }
- 
+
+        /// <summary>
+        /// Processes a an member by creating a node for him/her(if it does not exists) and assigning the node reference to his/her membership record
+        /// for postlogin redirections to right dashboard
+        /// </summary>
+        /// <param name="parentNodeIdAndKey"></param>
+        /// <param name="memberToProcess"></param>
+        private void ProcessMember(NodeIdAndKey<string, string> parentNodeIdAndKey, IMember memberToProcess)
+        {
+            if (parentNodeIdAndKey != null)  // Physiotherapists node must exists in Data content. It is the parent of all physios
+            {                                                             // Don't do following if it doesn't
+
+                var foundNode = FindNode(parentNodeIdAndKey.NodeId, memberToProcess.Username);
+                GuidUdi memberDataFolderValue;
+
+                if (foundNode == null) // if node for new physiotherapist is not already created, then create it and grab its uid
+                {
+
+                    var node = CreateNode(memberToProcess, parentNodeIdAndKey.NodeKey);
+
+                    memberDataFolderValue = node.GetUdi();
+
+                }
+                else // if node for new physiotherapist is already there, then create it and grab its uid anyways
+                {
+                    // using contextFactory is the recommended way of getting conten with V8 
+                    // <see href="https://our.umbraco.com/forum/umbraco-8/96270-using-umbracohelper-in-a-custom-class-in-v8"></see>
+                    using (var cref = _contextFactory.EnsureUmbracoContext())
+                    {
+                        var node = cref.UmbracoContext.Content.GetById(int.Parse(foundNode.Id));
+                        memberDataFolderValue = new GuidUdi("document", node.Key);
+                    }
+                }
+
+                // now set the uid to member's MemberDataFolder property
+                memberToProcess.SetValue(GetMemberPropsAlias(m => m.MemberDataFolder), memberDataFolderValue);
+            }
+        }
+
+        /// <summary>
+        /// creates node under the provided parentKey for the member
+        /// </summary>
+        /// <param name="member"></param>
+        /// <param name="parentKey"></param>
+        /// <returns></returns>
+        private IContent CreateNode(IMember member, string parentKey)
+        {
+            var node = _contentService.Create(member.Username, Guid.Parse(parentKey), Published.Physiotherapist.ModelTypeAlias);
+            node.SetValue(GetPhysioPropsAlias(x => x.Physio_name), member.Name);
+            node.SetValue(GetPhysioPropsAlias(x => x.Physio_email), member.Email);
+
+            var address = GetUmbracoPropertyValue(member.Properties, GetMemberPropsAlias(m => m.Address));
+            var phone = GetUmbracoPropertyValue(member.Properties, GetMemberPropsAlias(m => m.Phone));
+            node.SetValue(GetPhysioPropsAlias(x => x.Physio_address), address);
+            node.SetValue(GetPhysioPropsAlias(x => x.Physio_contact), phone);
+
+            _contentService.SaveAndPublish(node);
+
+            return node;
+        }
+
+        /// <summary>
+        /// validates if all necessary member fields are provided by the user.
+        /// </summary>
+        /// <param name="member"></param>
+        /// <returns></returns>
         private bool MandatoryFieldsArePopulated(IMember member)
         {
             if (string.IsNullOrWhiteSpace(member.Name) || string.IsNullOrWhiteSpace(member.Email))
@@ -115,9 +143,15 @@ namespace Acme.UI.Infrastructure.Handlers
             }
 
             return true;
-        } 
+        }
 
-        private Tuple<string, string> GetPhysiotherapistsContainerIdAndKey()
+        /// <summary>
+        /// The new data node for the incomiong physio will be created under the Data\Physiotherapists node. The function searches 
+        /// and returns the Id and Key pair for the the "Physiotherapists" node. The new node will be created under the resulting node(Id and key)
+        /// of this function
+        /// </summary>
+        /// <returns></returns>
+        private NodeIdAndKey<string, string> GetPhysiotherapistsContainerIdAndKey()
         {
             if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
             {
@@ -129,14 +163,20 @@ namespace Acme.UI.Infrastructure.Handlers
                     var node = results.First();
                     var keyValue = node.Values.FirstOrDefault(x => "__Key".Equals(x.Key));
                     var key = keyValue.Value;
-                    return new Tuple<string, string>(node.Id, key);
+                    return new NodeIdAndKey<string, string>(node.Id, key);
                 }
             }
 
-            return new Tuple<string, string>(null, null);
+            return null;
         }
 
-        private ISearchResult findNode(string parentNodeId, string nodeName)
+        /// <summary>
+        /// checks before creating a new node that if it is not already created.
+        /// </summary>
+        /// <param name="parentNodeId"></param>
+        /// <param name="nodeName"></param>
+        /// <returns></returns>
+        private ISearchResult FindNode(string parentNodeId, string nodeName)
         {
             if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
             {
@@ -182,4 +222,17 @@ namespace Acme.UI.Infrastructure.Handlers
         }
 
     }
+
+    internal class NodeIdAndKey<TId, TKey>
+    {
+        public TId NodeId { get; set; }
+        public TKey NodeKey { get; set; }
+
+        public NodeIdAndKey(TId id, TKey key)
+        {
+            NodeId = id;
+            NodeKey = key;
+        }
+    }
+
 }

@@ -20,5 +20,15 @@ namespace Acme.UI.Helper.Extensions
                 obj.Add(item);
             }
         }
+
+        public static bool ContainsExt(this List<string> obj, string otherObject, bool caseInsensitive = true)
+        {
+            if (obj == null || otherObject == null)
+            {
+                return false;
+            }
+
+            return obj.FirstOrDefault(x => otherObject.Equals(x, StringComparison.InvariantCultureIgnoreCase)) != null;
+        }
     }
 }
