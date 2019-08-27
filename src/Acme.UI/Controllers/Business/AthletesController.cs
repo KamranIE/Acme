@@ -21,17 +21,27 @@ namespace Acme.UI.Controllers.Business
 
             var athleteName = GetAthleteNameFromUrl(this.Request.Url.OriginalString);
 
-            if (!athleteName.IsNullOrWhiteSpaceExt())
+            if (athleteName.IsNullOrWhiteSpaceExt())
             {
-                var logginPhysioNodeId = GetLoggedInPhysioNodeId();
-                var athletesForLoggedInUser = GetAthletesForLoggedInUser(logginPhysioNodeId);
+                return GetAtheleteById(null);
+            }
 
-                if (athletesForLoggedInUser.HasValues())
-                {
-                    var matchedAthlete = athletesForLoggedInUser.FirstOrDefault(athlete => athleteName.Equals(Umbraco.Content(athlete.Id).Name, System.StringComparison.InvariantCultureIgnoreCase));
+            var logginPhysioNodeId = GetLoggedInPhysioNodeId();
+            var athletesForLoggedInUser = GetAthletesForLoggedInUser(logginPhysioNodeId);
 
-                    return matchedAthlete != null ? GetAtheleteById(int.Parse(matchedAthlete.Id)) : GetAtheleteById(null);
-                }
+            if (athletesForLoggedInUser.HasValues())
+            {
+                var matchedAthlete = athletesForLoggedInUser.FirstOrDefault(athlete => 
+                                                {
+                                                    var content = Umbraco.Content(athlete.Id);
+                                                    if (content == null)
+                                                    {
+                                                        return false;
+                                                    }
+                                                    return athleteName.Equals(content.Name, System.StringComparison.InvariantCultureIgnoreCase);
+                                                });
+
+                return matchedAthlete != null ? GetAtheleteById(int.Parse(matchedAthlete.Id)) : GetAtheleteById(null);
             }
 
             return GetAtheleteById(null);
@@ -49,18 +59,17 @@ namespace Acme.UI.Controllers.Business
             var logginPhysioNodeId = GetLoggedInPhysioNodeId();
             var athletesForLoggedInUser = GetAthletesForLoggedInUser(logginPhysioNodeId);
             var physioAthletesViewModel = PhysioAthletesViewModel.Create(Umbraco, logginPhysioNodeId ?? 0, maxAthletesToDisplay);
-            
-            if (athletesForLoggedInUser != null)
+
+            if (!athletesForLoggedInUser.HasValues())
             {
-                if (athletesForLoggedInUser.Any())
+                return View("~/Views/BusinessPages/Athletes/List.cshtml", physioAthletesViewModel);
+            }
+
+            foreach (var item in athletesForLoggedInUser)
+            {
+                if (item.Id != null)
                 {
-                    foreach (var item in athletesForLoggedInUser)
-                    {
-                        if (item.Id != null)
-                        {
-                            physioAthletesViewModel.AddAthlete(new AthleteViewModel(Umbraco.Content(item.Id)));
-                        }
-                    }
+                    physioAthletesViewModel.AddAthlete(new AthleteViewModel(Umbraco.Content(item.Id)));
                 }
             }
 
@@ -69,17 +78,23 @@ namespace Acme.UI.Controllers.Business
 
         private string GetAthleteNameFromUrl(string url)
         {
-            Regex regex = new Regex("(?<home>dashboard)/(?<section>athlete)/(?<athleteName>[a-zA-Z0-9-]+)");
-            var matches = regex.Matches(url);
+            Regex regex = new Regex("(?<home>(?i)dashboard)/(?<section>(?i)athlete)/(?<athleteName>[a-zA-Z0-9-]+)");
+            // (?i) is used for case insensitive match in each group excep athleteName where it is implicit
+            // ?<xyz> is the group identifier(or name) which is given to each group in the regex for easy 
+            // access to contents matched to a group
 
-            if (matches != null && matches.Count > 0)
+            var matches = regex.Matches(url); 
+
+            if (matches == null || matches.Count <= 0)
             {
-                var groups = (matches[0] as System.Text.RegularExpressions.Match)?.Groups;
+                return null;
+            }
 
-                if (groups != null)
-                {
-                    return groups["athleteName"]?.Value;
-                }
+            var groups = (matches[0] as Match)?.Groups;
+
+            if (groups != null)
+            {
+                return groups["athleteName"]?.Value.Replace("-", " "); // replace hyphens with space for name to name comparison
             }
 
             return null;
@@ -87,14 +102,15 @@ namespace Acme.UI.Controllers.Business
 
         private ISearchResults GetAthletesForLoggedInUser(int? logginPhysioNodeId)
         {
-
-            if (logginPhysioNodeId != null)
+            if (logginPhysioNodeId == null)
             {
-                if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
-                {
-                    var searcher = index.GetSearcher();
-                    return searcher.CreateQuery("content").ParentId(logginPhysioNodeId.Value).Execute();
-                }
+                return null;
+            }
+
+            if (ExamineManager.Instance.TryGetIndex("ExternalIndex", out var index))
+            {
+                var searcher = index.GetSearcher();
+                return searcher.CreateQuery("content").ParentId(logginPhysioNodeId.Value).Execute();
             }
 
             return null;

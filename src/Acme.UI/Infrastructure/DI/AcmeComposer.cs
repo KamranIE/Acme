@@ -20,7 +20,6 @@ namespace Acme.UI.Infrastructure.DI
         private void RegisterComponents(Composition composition)
         {
             composition.Components().Append<MemberSaveHandler>();
-                                    //.Append<AcmeRouter>();
         }
 
         private void RegisterServices(Composition composition)

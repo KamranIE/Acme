@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Umbraco.Core;
 
 namespace Acme.UI.Infrastructure.Routing
 {
@@ -10,7 +11,6 @@ namespace Acme.UI.Infrastructure.Routing
         public Type DataSourceType { get; private set; }
 
         public string SearchNodeByName { get; private set; }
-        public string SearchNodeByNameFormatted { get; private set; }
 
         public string RootNodeName { get; private set; }
 
@@ -18,7 +18,6 @@ namespace Acme.UI.Infrastructure.Routing
         {
             DataSourceType = dataSourceType;
             SearchNodeByName = searchNodeByName;
-            SearchNodeByNameFormatted = searchNodeByName.Replace("-", " ");
             RootNodeName = rootNodeName;
         }
     }

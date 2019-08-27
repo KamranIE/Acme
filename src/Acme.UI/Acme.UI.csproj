@@ -129,7 +129,6 @@
     <Compile Include="Helper\Services\IAcmeService.cs" />
     <Compile Include="Infrastructure\Handlers\MemberSaveHandler.cs" />
     <Compile Include="Infrastructure\Routing\AcmeContentFinder.cs" />
-    <Compile Include="Infrastructure\Routing\AcmeRouter.cs" />
     <Compile Include="Infrastructure\Routing\RouteParameters.cs" />
     <Compile Include="Infrastructure\Routing\VirtualRouteHandlers\LoginVirtualPathHandler.cs" />
     <Compile Include="Models\Athletes\AthleteViewModel.cs" />

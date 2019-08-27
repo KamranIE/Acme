@@ -14,7 +14,9 @@ namespace Acme.UI.Infrastructure.Routing
     {
         private readonly Dictionary<string, RouteParameters> _pathToContentType = new Dictionary<string, RouteParameters>
         {
-            { "(?<home>dashboard)/(?<section>athlete)/(?<athleteName>[a-zA-Z0-9-]+)", new RouteParameters(typeof(Umbraco.Web.PublishedModels.Athlete), "Athlete", "//home/contentPage/contentPage")}
+            // (?i) is used for case insensitive match 
+            { "(?i)dashboard/athlete/[a-zA-Z0-9-]+", new RouteParameters(typeof(Umbraco.Web.PublishedModels.Athlete), "Athlete", "//home/contentPage/contentPage")}
+            
         };
 
         public bool TryFindContent(PublishedRequest request)
@@ -33,18 +35,23 @@ namespace Acme.UI.Infrastructure.Routing
                 Regex regex = new Regex(route.Key);
                 var matches = regex.Matches(path);
 
-                if (matches != null && matches.Count > 0)
+                if (matches == null || matches.Count <= 0)
                 {
-                    var groups = (matches[0] as System.Text.RegularExpressions.Match)?.Groups;
-                    if (groups != null)
-                    {
-                        var publishedContents = umbracoContext.Content.GetByXPath(route.Value.RootNodeName);
+                    return null;
+                }
 
-                        if (publishedContents.HasValues())
-                        {
-                            return publishedContents.FirstOrDefault(x => string.Compare(x.Name, route.Value.SearchNodeByName, true) == 0);
-                        }
-                    }
+                var groups = (matches[0] as System.Text.RegularExpressions.Match)?.Groups;
+
+                if (groups == null)
+                {
+                    return null;
+                }
+
+                var publishedContents = umbracoContext.Content.GetByXPath(route.Value.RootNodeName);
+
+                if (publishedContents.HasValues())
+                {
+                    return publishedContents.FirstOrDefault(x => string.Compare(x.Name, route.Value.SearchNodeByName, true) == 0);
                 }
             }
 
