@@ -79,7 +79,7 @@ namespace Acme.UI.Controllers.Business
         private string GetAthleteNameFromUrl(string url)
         {
             Regex regex = new Regex("(?<home>(?i)dashboard)/(?<section>(?i)athlete)/(?<athleteName>[a-zA-Z0-9-]+)");
-            // (?i) is used for case insensitive match in each group excep athleteName where it is implicit
+            // (?i) is used for case insensitive match in each group except athleteName where it is implicit
             // ?<xyz> is the group identifier(or name) which is given to each group in the regex for easy 
             // access to contents matched to a group
 
