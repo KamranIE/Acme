@@ -127,6 +127,7 @@
   <ItemGroup>
     <Content Include="Acme.UI.nuspec" />
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\CIDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\LocalDev.pubxml" />
     <Content Include="Views\BusinessPages\Athletes\Athlete.cshtml" />
     <Content Include="Views\assessment.cshtml" />
