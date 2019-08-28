@@ -5,3 +5,4 @@ UmbracoCms.8.1.1/*
 /src/packages
 /src/Acme.UI/fonts
 /NuCache*
+*.pubxml.user
