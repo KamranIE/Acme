@@ -14,8 +14,7 @@ namespace Acme.UI.Infrastructure.Routing
     {
         private readonly Dictionary<string, RouteParameters> _pathToContentType = new Dictionary<string, RouteParameters>
         {
-            // (?i) is used for case insensitive match 
-            { "(?i)dashboard/athlete/[a-zA-Z0-9-]+", new RouteParameters(typeof(Umbraco.Web.PublishedModels.Athlete), "Athlete", "//home/contentPage/contentPage")}
+            { Helper.Constants.RegexAthleteUrl, new RouteParameters(typeof(Umbraco.Web.PublishedModels.Athlete), "Athlete", "//home/contentPage/contentPage")}
             
         };
 

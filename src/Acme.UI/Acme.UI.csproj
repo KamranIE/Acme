@@ -119,6 +119,7 @@
   <ItemGroup>
     <Compile Include="Controllers\Authentication\MemberController.cs" />
     <Compile Include="Controllers\Business\AthletesController.cs" />
+    <Compile Include="Helper\Constants.cs" />
     <Compile Include="Helper\Extensions\CollectionExtension.cs" />
     <Compile Include="Helper\Extensions\PublishedContentModelExtension.cs" />
     <Compile Include="Helper\Extensions\StringExtension.cs" />

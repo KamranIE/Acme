@@ -7,6 +7,7 @@ using Acme.UI.Models.Athletes;
 using Umbraco.Web.PublishedModels;
 using System.Text.RegularExpressions;
 using Acme.UI.Helper.Extensions;
+using Acme.UI.Helper;
 
 namespace Acme.UI.Controllers.Business
 {
@@ -78,7 +79,7 @@ namespace Acme.UI.Controllers.Business
 
         private string GetAthleteNameFromUrl(string url)
         {
-            Regex regex = new Regex("(?<home>(?i)dashboard)/(?<section>(?i)athlete)/(?<athleteName>[a-zA-Z0-9-]+)");
+            Regex regex = new Regex(Constants.RegexAthleteUrl);
             // (?i) is used for case insensitive match in each group except athleteName where it is implicit
             // ?<xyz> is the group identifier(or name) which is given to each group in the regex for easy 
             // access to contents matched to a group
