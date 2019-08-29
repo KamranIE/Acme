@@ -12,4 +12,7 @@
     <description>Acme Umbraco</description>
     <releaseNotes>Release notes will be provided later</releaseNotes>
   </metadata>
+  <files>
+    <file src="ci.deploy\**" target="" />
+  </files>  
 </package>
