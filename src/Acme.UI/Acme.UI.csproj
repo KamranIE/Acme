@@ -152,6 +152,7 @@
     <Content Include="Views\MacroPartials\LatestBlogposts.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -164,6 +165,12 @@
       <Name>Acme.Umbraco.Models</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <uSyncFiles Include="..\..\UmbracoCms.8.1.1\uSync\Acme\**\*.*" />
+  </ItemGroup>
+  <Target Name="CopyFiles">
+    <Copy SourceFiles="@(uSyncFiles)" DestinationFolder="\uSync\Acme\')" />
+  </Target>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
