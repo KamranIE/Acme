@@ -1,4 +1,13 @@
-UmbracoCms.8.1.1/*
+/UmbracoCms.8.1.1/*.*
+/UmbracoCms.8.1.1/App_Data
+/UmbracoCms.8.1.1/css
+/UmbracoCms.8.1.1/media
+/UmbracoCms.8.1.1/Usync_1
+/UmbracoCms.8.1.1/App_Plugins
+/UmbracoCms.8.1.1/Bin
+/UmbracoCms.8.1.1/Umbraco
+/UmbracoCms.8.1.1/Config
+/UmbracoCms.8.1.1/Views
 /src/.vs
 /src/*/obj/*
 /src/*/bin/*
@@ -6,3 +15,4 @@ UmbracoCms.8.1.1/*
 /src/Acme.UI/fonts
 /NuCache*
 *.pubxml.user
+UpgradeLog*.htm

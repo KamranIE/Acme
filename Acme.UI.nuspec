@@ -14,5 +14,6 @@
   </metadata>
   <files>
     <file src="deploy.ci\**" target="" />
+	<file src="UmbracoCms.8.1.1\uSync\**" target="uSync" />
   </files>  
 </package>
