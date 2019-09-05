@@ -16,3 +16,6 @@
 /NuCache*
 *.pubxml.user
 UpgradeLog*.htm
+/src/Acme.Umbraco.Models/App_Data/
+/src/Acme.Umbraco.Models/App_Plugins/
+/src/Acme.Umbraco.Models/*.user

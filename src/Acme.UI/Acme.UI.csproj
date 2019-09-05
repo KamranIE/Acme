@@ -66,6 +66,9 @@
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Http">
+      <HintPath>..\dependencies\System.Web.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
@@ -97,6 +100,12 @@
     <Reference Include="Umbraco.Web">
       <HintPath>..\dependencies\Umbraco.Web.dll</HintPath>
     </Reference>
+    <Reference Include="uSync8.BackOffice, Version=8.1.0.709, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\uSync.BackOffice.Core.8.1.0\lib\net472\uSync8.BackOffice.dll</HintPath>
+    </Reference>
+    <Reference Include="uSync8.Core, Version=8.1.1.722, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\uSync.Core.8.1.1\lib\net472\uSync8.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\Acme.css">
@@ -115,6 +124,8 @@
   <ItemGroup>
     <Compile Include="Controllers\Authentication\MemberController.cs" />
     <Compile Include="Controllers\Business\AthletesController.cs" />
+    <Compile Include="Controllers\Business\USyncController.cs" />
+    <Compile Include="Helper\Extensions\CollectionExtension.cs" />
     <Compile Include="Helper\Extensions\StringExtension.cs" />
     <Compile Include="Infrastructure\Handlers\PublishHandler.cs" />
     <Compile Include="Infrastructure\Routing\AcmeRouter.cs" />
