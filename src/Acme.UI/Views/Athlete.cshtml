@@ -9,7 +9,7 @@
 <section class="section">
 
     <div class="container">
-        @Html.Action("GetAthlete", "Athletes", new {athlete = @Model})
+        @Html.Action("AthleteDetails", "Athletes", new { athleteId = @Model.Id})
     </div>
 
 </section>

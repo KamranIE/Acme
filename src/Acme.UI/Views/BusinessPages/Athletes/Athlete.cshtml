@@ -2,28 +2,28 @@
 
 @inherits Umbraco.Web.Mvc.UmbracoViewPage<AthleteViewModel>
 @using Umbraco.Web;
-
-    <script>
+@{ var msg = (Model != null ? Model.Name : "Athlete not found");}
+<script>
         var elements = document.getElementsByClassName("no-air");
 
         if (elements) {
             for (let element of elements) {
                 if (element.tagName == "h1" || element.tagName == "H1") {
-                    element.innerHTML = "@Model.Name";
+                    element.innerHTML = "@msg";
                 }
             }
         }
 
-    </script>
- 
-    @if (Model.SportType != null && Model.SportType.Any())
-    {
+</script>
+
+@if (Model != null && Model.SportType != null && Model.SportType.Any())
+{
 
     <div>@Model.Salutation plays:</div>
     <ul>
         @foreach (var sport in Model.SportType)
         {
-        <li>@sport</li>
+            <li>@sport</li>
         }
     </ul>
-    }
+}
