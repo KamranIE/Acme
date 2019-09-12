@@ -83,7 +83,7 @@ _**Note: Above lines are necessary to kill the VBCSCompiler before you start bui
 * __Important:__ The files from models folder are not automatically copied and included to the project. You will have to include any new changes to the project manually.
  
 ---
-## Git setup
+## Umbraco Files - Things to remember
 Along with Acme solution and projects the \UmbracoCms.8.1.1\App_Data\Models folder is included to be checked in. What that means is in case of any changes in the document types (addition, deletion or modification of properties or document types themselves), you need to do following:
 1. If there is/are new document type(s)
 	1. Add it to git changeset
@@ -97,7 +97,6 @@ Along with Acme solution and projects the \UmbracoCms.8.1.1\App_Data\Models fold
 
 
 ## TODO Tasks
-1. Configure Examine to auto re-index
 1. Physiotherapist Registration Page
 1. Dependency Injection
 1. Investigate custom urls without content that backs it, This will look into pipelines

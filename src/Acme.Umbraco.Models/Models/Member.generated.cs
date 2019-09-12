@@ -46,11 +46,25 @@ namespace Umbraco.Web.PublishedModels
 		// properties
 
 		///<summary>
+		/// Address
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
+		[ImplementPropertyType("address")]
+		public string Address => this.Value<string>("address");
+
+		///<summary>
 		/// Member Data Folder
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
 		[ImplementPropertyType("memberDataFolder")]
 		public IPublishedContent MemberDataFolder => this.Value<IPublishedContent>("memberDataFolder");
+
+		///<summary>
+		/// Phone
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder", "8.1.0")]
+		[ImplementPropertyType("phone")]
+		public string Phone => this.Value<string>("phone");
 
 		///<summary>
 		/// Is Approved

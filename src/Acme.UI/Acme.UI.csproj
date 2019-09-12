@@ -93,6 +93,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Examine.dll</HintPath>
     </Reference>
+    <Reference Include="Umbraco.ModelsBuilder, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.ModelsBuilder.dll</HintPath>
+    </Reference>
     <Reference Include="Umbraco.Web">
       <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Web.dll</HintPath>
     </Reference>
@@ -115,12 +119,19 @@
   <ItemGroup>
     <Compile Include="Controllers\Authentication\MemberController.cs" />
     <Compile Include="Controllers\Business\AthletesController.cs" />
+    <Compile Include="Helper\Extensions\CollectionExtension.cs" />
+    <Compile Include="Helper\Extensions\PublishedContentModelExtension.cs" />
     <Compile Include="Helper\Extensions\StringExtension.cs" />
-    <Compile Include="Infrastructure\Handlers\PublishHandler.cs" />
-    <Compile Include="Infrastructure\Routing\AcmeRouter.cs" />
+    <Compile Include="Helper\Extensions\UmbracoPropertyExtension.cs" />
+    <Compile Include="Helper\Services\CustomService.cs" />
+    <Compile Include="Helper\Services\ExamineHelper.cs" />
+    <Compile Include="Infrastructure\DI\AcmeComposer.cs" />
+    <Compile Include="Helper\Services\IAcmeService.cs" />
+    <Compile Include="Infrastructure\Handlers\MemberSaveHandler.cs" />
     <Compile Include="Models\Athletes\AthleteViewModel.cs" />
     <Compile Include="Models\Athletes\PhysioAthletesViewModel.cs" />
     <Compile Include="Models\Authentication\LoginModel.cs" />
+    <Compile Include="Models\Authentication\MemberViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +161,8 @@
     <Content Include="Views\MacroPartials\FeaturedProducts.cshtml" />
     <Content Include="Views\MacroPartials\GetMyAthletes.cshtml" />
     <Content Include="Views\MacroPartials\LatestBlogposts.cshtml" />
+    <Content Include="Views\Register.cshtml" />
+    <Content Include="Views\BusinessPages\Authentication\_Registration.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
