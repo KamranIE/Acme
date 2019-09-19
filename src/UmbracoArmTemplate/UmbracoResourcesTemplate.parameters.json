@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": {
+      "value": "umbracoweb811ie002"
+    },
+    "dbServerName": {
+      "value": "genuniqueservername"
+    },
+    "dbName": {
+      "value": "umbraco811database"
+    },
+    "dbAdministratorLogin": {
+      "value": "umbracoadmin"
+    },
+    "dbAdministratorLoginPassword": {
+      "value": "gen1Password@"
+    },
+    "nonAdminDatabaseUserName": {
+      "value": "genunique8"
+    },
+    "nonAdminDatabasePassword": {
+      "value": "gen2Password@"
+    }
+  }
+}

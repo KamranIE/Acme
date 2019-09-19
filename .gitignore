@@ -7,3 +7,8 @@ UmbracoCms.8.1.1/*
 /src/Acme.UI/fonts
 /NuCache*
 UpgradeLog*.htm
+/src/Acme.UI/node_modules/
+/src/Acme.Umbraco.Models/App_Data/
+/src/Acme.UI/package-lock.json
+/src/Acme.Umbraco.Models/App_Plugins/
+/src/Acme.Umbraco.Models/config/

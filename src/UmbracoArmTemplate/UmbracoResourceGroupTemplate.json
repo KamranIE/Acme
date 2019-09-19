@@ -1,0 +1,31 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.1",
+  "variables": {},
+  "parameters": {
+    "resGrpName": {
+      "type": "string"
+    },
+    "tagValue": {
+      "type": "string"
+    },
+    "globalLocation": {
+      "type": "string"
+    },
+    "globalTags": {
+      "type": "object",
+      "defaultValue": {}
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2018-05-01",
+      "location": "[parameters('globalLocation')]",
+      "name": "[parameters('resGrpName')]",
+      "properties": {},
+      "tags": "[parameters('globalTags')]"
+    }
+  ],
+  "outputs": {}
+}
