@@ -31,6 +31,11 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <FilesToIncludeForPublish>OnlyFilesToRunTheApp</FilesToIncludeForPublish>
+    <ExcludeGeneratedDebugSymbol>false</ExcludeGeneratedDebugSymbol>
+    <PublishDatabases>true</PublishDatabases>
+    <IncludeIisSettings>false</IncludeIisSettings>
+    <DeployEncryptKey>Encryption password is used only if any deployment setting is marked as secure</DeployEncryptKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,13 +47,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Examine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\UmbracoCms.8.1.1\bin\Examine.dll</HintPath>
-    </Reference>
-    <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Bin\Lucene.Net.dll</HintPath>
+    <Reference Include="Examine">
+      <HintPath>..\dependencies\Examine.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -65,6 +65,9 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http">
+      <HintPath>..\dependencies\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
@@ -88,17 +91,24 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="Umbraco.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=null" />
-    <Reference Include="Umbraco.Examine, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Examine.dll</HintPath>
+    <Reference Include="Umbraco.Core">
+      <HintPath>..\dependencies\Umbraco.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Umbraco.Examine">
+      <HintPath>..\dependencies\Umbraco.Examine.dll</HintPath>
     </Reference>
     <Reference Include="Umbraco.ModelsBuilder, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.ModelsBuilder.dll</HintPath>
     </Reference>
     <Reference Include="Umbraco.Web">
-      <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.Web.dll</HintPath>
+      <HintPath>..\dependencies\Umbraco.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="uSync8.BackOffice, Version=8.1.0.709, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\uSync.BackOffice.Core.8.1.0\lib\net472\uSync8.BackOffice.dll</HintPath>
+    </Reference>
+    <Reference Include="uSync8.Core, Version=8.1.1.722, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\uSync.Core.8.1.1\lib\net472\uSync8.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -113,12 +123,12 @@
     <Content Include="Views\BusinessPages\Athletes\List.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Authentication\MemberController.cs" />
     <Compile Include="Controllers\Business\AthletesController.cs" />
+    <Compile Include="Controllers\Business\USyncController.cs" />
     <Compile Include="Helper\Extensions\CollectionExtension.cs" />
     <Compile Include="Helper\Extensions\PublishedContentModelExtension.cs" />
     <Compile Include="Helper\Extensions\StringExtension.cs" />
@@ -165,11 +175,10 @@
     <Content Include="Views\BusinessPages\Authentication\_Registration.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup />
@@ -208,6 +217,11 @@
     <PreBuildEvent>tasklist /FI "IMAGENAME eq VBCSCompiler.exe" 2&gt;NUL | find /I /N "VBCSCompiler.exe"&gt;NUL
 if "%25ERRORLEVEL%25"=="0" (taskkill /IM VBCSCompiler.exe /F) else (verify &gt;NUL)</PreBuildEvent>
   </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Acme.UI</id>
+    <version>1.0.0</version>
+    <title>Acme Website Umbraco</title>
+    <authors>Kam</authors>
+    <owners>Kam</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>http://acme/</licenseUrl>
+    <projectUrl>http://acme/</projectUrl>
+    <description>Acme Umbraco</description>
+    <releaseNotes>Release notes will be provided later</releaseNotes>
+  </metadata>
+  <files>
+    <file src="deploy.ci\**" target="" />
+	<file src="UmbracoCms.8.1.1\uSync\**" target="uSync" />
+  </files>  
+</package>

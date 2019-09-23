@@ -21,6 +21,22 @@ namespace Acme.UI.Helper.Extensions
             }
         }
 
+
+        public static bool NotNullAndContainsKey<TKey, TValue>(this IDictionary<TKey, TValue> obj, TKey key)
+        {
+            return obj != null && obj.Keys != null && obj.Keys.Contains(key);
+        }
+
+        public static TValue GetValue<TKey, TValue>(this IDictionary<TKey, TValue> obj, TKey key)
+        {
+            if (obj.NotNullAndContainsKey(key))
+            {
+                return obj[key];
+            }
+
+            return default(TValue);
+        }
+
         public static bool ContainsExt(this List<string> obj, string otherObject, bool caseInsensitive = true)
         {
             if (obj == null || otherObject == null)
