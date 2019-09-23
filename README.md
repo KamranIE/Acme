@@ -11,7 +11,7 @@ This document describes Umbraco and Project setup and their details to help rese
 3. Git Client (Tortoise, GitExtension, Source Tree etc. )
 
 ## Umbraco 
-Umbraco 8.1.1 is used to setup the document types, templates and content for the '\acme\' website. Following are its setup and further 
+Umbraco 8.1.1  is used to setup the document types, templates and content for the '\acme\' website. Following are its setup and further 
 details. 
 
 ### Local Setup
