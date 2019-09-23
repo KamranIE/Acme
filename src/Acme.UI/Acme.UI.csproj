@@ -99,7 +99,7 @@
     </Reference>
     <Reference Include="Umbraco.ModelsBuilder, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\UmbracoCms.8.1.1\bin\Umbraco.ModelsBuilder.dll</HintPath>
+      <HintPath>..\dependencies\Umbraco.ModelsBuilder.dll</HintPath>
     </Reference>
     <Reference Include="Umbraco.Web">
       <HintPath>..\dependencies\Umbraco.Web.dll</HintPath>
