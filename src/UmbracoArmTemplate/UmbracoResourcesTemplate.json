@@ -139,7 +139,7 @@
               "properties": {
                 "storageKeyType": "SharedAccessKey",
                 "storageKey": "?wf9YF85Gq552QeTa16hxXf2LKn1IVjEzCFRNQXeGOyUfVPIp4RWKFbg1U63ryf6XapVde7EWWjh6sCl/qXpksQ==",
-                "storageUri": "https://iestorage001.blob.core.windows.net/iepackages/umbraco01.bacpac",
+                "storageUri": "https://iestorage001.blob.core.windows.net/iestorage001/umbraco01.bacpac",
                 "administratorLogin": "[parameters('dbAdministratorLogin')]",
                 "administratorLoginPassword": "[parameters('dbAdministratorLoginPassword')]",
                 "operationMode": "Import"
@@ -216,7 +216,7 @@
             "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
           ],
           "properties": {
-            "packageUri": "https://iestorage001.blob.core.windows.net/iepackages/UmbracoCms.8.1.1-ie009.zip",
+            "packageUri": "https://iestorage001.blob.core.windows.net/iestorage001/UmbracoCms.8.1.1-ie009.zip",
             "dbType": "SQL",
             "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('dbServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('dbName'), ';User Id=', parameters('dbAdministratorLogin'), '@', parameters('dbServerName'), ';Password=', parameters('dbAdministratorLoginPassword'), ';')]",
             "setParameters": {
