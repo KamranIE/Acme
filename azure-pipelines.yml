@@ -28,4 +28,4 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- powershell: '**/./UmbracoDeployment.ps1'
+- powershell: '$(Build.SourcesDirectory)/**/UmbracoArmTemplate/UmbracoDeployment.ps1'
