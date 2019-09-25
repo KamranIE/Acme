@@ -28,4 +28,6 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- powershell: Install-Module -Name Az -AllowClobber -Scope CurrentUser
+
 - powershell: '$(Build.SourcesDirectory)/**/UmbracoArmTemplate/UmbracoDeployment.ps1'
