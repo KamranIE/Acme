@@ -28,6 +28,6 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- powershell: If (-Not (Get-Module -ListAvailable -Name Az)) { Install-Module -Name Az -AllowClobber -Scope AllUsers}
+- powershell: If (-Not (Get-Module -ListAvailable -Name Az)) { Install-Module -Name Az -AllowClobber -Scope AllUsers -Force }
 
 - powershell: '$(Build.SourcesDirectory)/**/UmbracoArmTemplate/UmbracoDeployment.ps1'
