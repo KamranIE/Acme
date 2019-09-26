@@ -5,7 +5,7 @@ try
 catch
 { 
 	Write-Host "You're not connected. Please Connect using your credentials in the popup"; 
-	Connect-AzAccount
+	#Connect-AzAccount ## On Azure Subscription should be used
  }
  
  $resourceGroupName = "UmbracoResourceGroupDeployment001"
@@ -62,4 +62,4 @@ catch
 	}
  }
 
- Disconnect-AzAccount
+ ## Disconnect-AzAccount # Azure DevOps - Disconnection not needed
