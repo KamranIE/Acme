@@ -33,8 +33,8 @@ catch
 	 New-AzDeployment `
 	  -Name AcmeDeployment `
 	  -Location $globalLocation `
-	  -TemplateFile "UmbracoResourceGroupTemplate.json" `
-	  -TemplateParameterFile "UmbracoResourceGroupTemplate.parameters.json" `
+	  -TemplateFile "$PSScriptRoot\UmbracoResourceGroupTemplate.json" `
+	  -TemplateParameterFile "$PSScriptRoot\UmbracoResourceGroupTemplate.parameters.json" `
 	  @dynamicParams
  }
  else
@@ -46,8 +46,8 @@ catch
  {
 	 New-AzResourceGroupDeployment `
 		 -ResourceGroupName $resourceGroupName `
-		 -TemplateFile "UmbracoResourcesTemplate.json" `
-		 -TemplateParameterFile "UmbracoResourcesTemplate.parameters.json" `
+		 -TemplateFile "$PSScriptRoot\UmbracoResourcesTemplate.json" `
+		 -TemplateParameterFile "$PSScriptRoot\UmbracoResourcesTemplate.parameters.json" `
 		 -ErrorAction Stop 
  }
  catch
