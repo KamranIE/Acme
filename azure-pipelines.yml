@@ -28,7 +28,7 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: AzurePowerShell@3
+- task: AzurePowerShell@4
   inputs:
     azureSubscription: ie_azure_sandbox
     ScriptPath: '$(Build.SourcesDirectory)/**/UmbracoArmTemplate/UmbracoDeployment.ps1'
