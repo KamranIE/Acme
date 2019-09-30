@@ -5,11 +5,12 @@ try
 catch
 { 
 	Write-Host "You're not connected. Please Connect using your credentials in the popup"; 
-	#Connect-AzAccount ## On Azure Subscription should be used
+	##Connect-AzAccount ## On Azure Subscription should be used - For local use uncomment
  }
  
  $resourceGroupName = "UmbracoResourceGroupDeployment001"
  $globalLocation = "Australia Southeast"
+ $dbServerName = "genuniqueservername"
 
  $dynamicParams = @{ 
    resGrpName = $resourceGroupName
@@ -42,13 +43,34 @@ catch
 	Write-Host "Resource Group $resourceGroupName already exists. Moving forward with resources deployment" -ForegroundColor white -BackgroundColor red; 
  } 
  
+ ## Check if we need to deploy resources. If at least database is there assume we don't need to deploy resources
+ ## Usually ARM automatically skips the existing resources. This is being done specifically to safe some CPU cycles but specifically to
+ ## to avoid any errors e.g. bacpac file import fails if db already exists.
+
+ $dbAlreadyExists = 1
  try
  {
-	 New-AzResourceGroupDeployment `
-		 -ResourceGroupName $resourceGroupName `
-		 -TemplateFile "$PSScriptRoot\UmbracoResourcesTemplate.json" `
-		 -TemplateParameterFile "$PSScriptRoot\UmbracoResourcesTemplate.parameters.json" `
-		 -ErrorAction Stop 
+	Get-AzSqlDatabase -ResourceGroupName "$resourceGroupName" -ServerName "$dbServerName" -ErrorAction Stop  ## -ErrorAction Stop will force to fall in the exception block on any exception 
+ }
+ catch
+ {
+   $dbAlreadyExists = 0
+ }
+
+ try
+ {
+	if ($dbAlreadyExists -eq 0) 
+	{
+		New-AzResourceGroupDeployment `
+			-ResourceGroupName $resourceGroupName `
+			-TemplateFile "$PSScriptRoot\UmbracoResourcesTemplate.json" `
+			-TemplateParameterFile "$PSScriptRoot\UmbracoResourcesTemplate.parameters.json" `
+			-ErrorAction Stop 
+	}
+	else
+	{
+	    Write-Host "database server $dbServerName already exists. Skipping resources deployment." -ForegroundColor white -BackgroundColor red; 
+	}
  }
  catch
  {
@@ -62,4 +84,4 @@ catch
 	}
  }
 
- ## Disconnect-AzAccount # Azure DevOps - Disconnection not needed
+ ## Disconnect-AzAccount # For Azure DevOps Disconnection not needed - For local use uncomment
