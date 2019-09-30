@@ -21,6 +21,12 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+- task: AzurePowerShell@4
+  inputs:
+    azureSubscription: ie_azure_sandbox
+    ScriptPath: '$(Build.SourcesDirectory)/**/UmbracoArmTemplate/UmbracoDeployment.ps1'
+    azurePowerShellVersion: LatestVersion
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
@@ -28,8 +34,3 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: AzurePowerShell@4
-  inputs:
-    azureSubscription: ie_azure_sandbox
-    ScriptPath: '$(Build.SourcesDirectory)/**/UmbracoArmTemplate/UmbracoDeployment.ps1'
-    azurePowerShellVersion: LatestVersion
